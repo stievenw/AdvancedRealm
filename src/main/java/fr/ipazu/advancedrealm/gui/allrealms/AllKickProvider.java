@@ -51,7 +51,7 @@ public class AllKickProvider implements InventoryProvider {
     public void init(Player player, InventoryContents inventoryContents) {
         Pagination pagination = inventoryContents.pagination();
         int i = 1;
-        ClickableItem basic = ClickableItem.of(new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 15), e -> e.setCancelled(true));
+        ClickableItem basic = ClickableItem.of(new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1, (byte) 15), e -> e.setCancelled(true));
         if (realmPlayer.getAllRealm().size() <= 9)
             inventoryContents.fill(basic);
         for (Realm r : avaiblerealms) {
@@ -78,7 +78,7 @@ public class AllKickProvider implements InventoryProvider {
                 }
             });
             if (realmPlayer.getOwned() == r) {
-                kick.getItem().setType(Material.BED);
+                kick.getItem().setType(Material.RED_BED);
             }
             if (realmPlayer.getAllRealm().size() <= 9)
                 placeIfVoid(kick, inventoryContents);
@@ -115,7 +115,7 @@ public class AllKickProvider implements InventoryProvider {
     public void placeIfVoid(ClickableItem clickableItem, InventoryContents inventoryContents) {
         SlotIterator iterator = inventoryContents.newIterator(SlotIterator.Type.HORIZONTAL, 0, 0);
         while (!iterator.ended()) {
-            if (!iterator.get().isPresent() || iterator.get().get().getItem().getType() == Material.STAINED_GLASS_PANE && iterator.get().isPresent()) {
+            if (!iterator.get().isPresent() || iterator.get().get().getItem().getType() == Material.GRAY_STAINED_GLASS_PANE && iterator.get().isPresent()) {
                 inventoryContents.set(iterator.row(), iterator.column(), clickableItem);
                 return;
             }

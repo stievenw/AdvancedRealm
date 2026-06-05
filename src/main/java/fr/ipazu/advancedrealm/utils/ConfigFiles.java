@@ -4,7 +4,6 @@ import fr.ipazu.advancedrealm.Main;
 import fr.ipazu.advancedrealm.realm.RealmConfig;
 import fr.ipazu.advancedrealm.realm.RealmLevel;
 import fr.ipazu.advancedrealm.realm.themes.ThemeConfig;
-import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;

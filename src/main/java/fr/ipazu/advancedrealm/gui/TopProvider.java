@@ -52,7 +52,7 @@ public class TopProvider implements InventoryProvider {
         Pagination pagination = inventoryContents.pagination();
         int i = 0;
         int rank = 1;
-        ClickableItem basic = ClickableItem.of(new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 15), e -> e.setCancelled(true));
+        ClickableItem basic = ClickableItem.of(new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1, (byte) 15), e -> e.setCancelled(true));
         if (Realm.allrealm.size() <= 9 * 4) {
             inventoryContents.fill(basic);
         }
@@ -136,7 +136,7 @@ public class TopProvider implements InventoryProvider {
     public void placeIfVoid(ClickableItem clickableItem, InventoryContents inventoryContents) {
         SlotIterator iterator = inventoryContents.newIterator(SlotIterator.Type.HORIZONTAL, 0, 0);
         while (!iterator.ended()) {
-            if (iterator.get().isPresent() && iterator.get().get().getItem().getType() == Material.STAINED_GLASS_PANE) {
+            if (iterator.get().isPresent() && iterator.get().get().getItem().getType() == Material.GRAY_STAINED_GLASS_PANE) {
                 inventoryContents.set(iterator.row(), iterator.column(), clickableItem);
                 return;
             }

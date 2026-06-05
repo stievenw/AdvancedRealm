@@ -148,12 +148,12 @@ public class EditMemberProvider implements InventoryProvider {
                     Bukkit.getPlayer(s.getName()).sendMessage("§e§l"+vised.getName()+" §ais now §dManager §aon§b§l "+realm.getOwner().getName()+"'s §aRealm.");
             }
         });
-        retour = ClickableItem.of(new ItemsUtils(Material.BED,"⬅ §bGo back",Arrays.asList("","§7Click to go back to the","§7Realm options.")).toItemStack(),e ->{
+        retour = ClickableItem.of(new ItemsUtils(Material.RED_BED,"⬅ §bGo back",Arrays.asList("","§7Click to go back to the","§7Realm options.")).toItemStack(),e ->{
             e.setCancelled(true);
             player.closeInventory();
             new WholeGUI().openMembersGui(player,realm);
         });
-        basic = ClickableItem.of(new ItemStack(Material.STAINED_GLASS_PANE,1,(byte) 15), e -> e.setCancelled(true));
+        basic = ClickableItem.of(new ItemStack(Material.GRAY_STAINED_GLASS_PANE,1,(byte) 15), e -> e.setCancelled(true));
     }
 
 

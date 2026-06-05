@@ -18,8 +18,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import java.util.ArrayList;
 
 public class RealmCommand implements CommandExecutor {
@@ -78,14 +76,9 @@ public class RealmCommand implements CommandExecutor {
                                 cb.append("§a to join! You have §d120 seconds §ato accept");
                                 visedplayer.spigot().sendMessage(cb.create());
                                 player.sendMessage(Config.getStringWithReplacementPlayer(config.getString("messages.realmcommands.invite.msgsent"),owned,vised));
-                                new BukkitRunnable() {
-                                    @Override
-                                    public void run() {
-                                        if (!vised.realmwaiting.contains(rp.getOwned()))
-                                            cancel();
-                                        vised.removeWaiting(rp.getOwned());
-                                    }
-                                }.runTaskLater(Main.getInstance(), 20 * 120);
+                                Bukkit.getGlobalRegionScheduler().runDelayed(Main.getInstance(), (t) -> {
+                                    vised.removeWaiting(rp.getOwned());
+                                }, 20 * 120);
                             }
                         } else {
                             player.sendMessage("§cYou don't have a realm where you can invite people");

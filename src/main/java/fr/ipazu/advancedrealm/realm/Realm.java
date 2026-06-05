@@ -1,6 +1,5 @@
 package fr.ipazu.advancedrealm.realm;
 
-import com.boydti.fawe.util.TaskManager;
 import fr.ipazu.advancedrealm.Main;
 import fr.ipazu.advancedrealm.realm.themes.Theme;
 import fr.ipazu.advancedrealm.realm.themes.ThemeType;
@@ -143,12 +142,12 @@ public class Realm {
             if (fromloc.getType() == Material.CHEST) {
                 Chest chest = (Chest) fromloc.getState();
                 if (ConfigFiles.getRealmchest() == null) {
-                    chest.getBlockInventory().setItem(2, new ItemStack(Material.CARROT_ITEM));
+                    chest.getBlockInventory().setItem(2, new ItemStack(Material.CARROT));
                     chest.getBlockInventory().setItem(3, new ItemStack(Material.SUGAR_CANE));
                     chest.getBlockInventory().setItem(5, new ItemStack(Material.MELON_STEM));
                     chest.getBlockInventory().setItem(6, new ItemStack(Material.ICE));
                     chest.getBlockInventory().setItem(13, new ItemStack(Material.TORCH, 8));
-                    chest.getBlockInventory().setItem(20, new ItemStack(Material.POTATO_ITEM));
+                    chest.getBlockInventory().setItem(20, new ItemStack(Material.POTATO));
                     chest.getBlockInventory().setItem(21, new ItemStack(Material.CACTUS));
                     chest.getBlockInventory().setItem(23, new ItemStack(Material.PUMPKIN));
                     chest.getBlockInventory().setItem(24, new ItemStack(Material.LAVA_BUCKET));

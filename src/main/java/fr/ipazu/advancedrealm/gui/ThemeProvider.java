@@ -35,7 +35,7 @@ public class ThemeProvider implements InventoryProvider {
         }
         @Override
         public void init(Player player, InventoryContents inventoryContents) {
-            ClickableItem basic = ClickableItem.of(new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 15), e -> e.setCancelled(true));
+            ClickableItem basic = ClickableItem.of(new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1, (byte) 15), e -> e.setCancelled(true));
             inventoryContents.fill(basic);
             for(ThemeType t : avaibletheme){
                 setItem(inventoryContents,ClickableItem.of(t.getItem(),e ->{
@@ -47,7 +47,7 @@ public class ThemeProvider implements InventoryProvider {
                 }));
 
             }
-            inventoryContents.set(2, 0, ClickableItem.of(new ItemsUtils(Material.BED, "⬅ §bGo back", Arrays.asList("", "§7Click to go back to the", "§7Realm options.")).toItemStack(), e -> {
+            inventoryContents.set(2, 0, ClickableItem.of(new ItemsUtils(Material.RED_BED, "⬅ §bGo back", Arrays.asList("", "§7Click to go back to the", "§7Realm options.")).toItemStack(), e -> {
                 e.setCancelled(true);
                 player.closeInventory();
                 new WholeGUI().openRealmGui(player, realm, false);
@@ -63,7 +63,7 @@ public class ThemeProvider implements InventoryProvider {
             SlotIterator iterator = inventoryContents.newIterator(SlotIterator.Type.HORIZONTAL, 0, 0);
             while (!iterator.ended()) {
                 if (iterator.get().isPresent()) {
-                    if (iterator.get().get().getItem().getType() == Material.STAINED_GLASS_PANE) {
+                    if (iterator.get().get().getItem().getType() == Material.GRAY_STAINED_GLASS_PANE) {
                         inventoryContents.set(iterator.row(), iterator.column(), clickableItem);
                         return;
                     }

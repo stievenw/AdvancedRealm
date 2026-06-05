@@ -1,7 +1,9 @@
 name: AdvancedRealm
 author: iPazu
-version: 1.2.1.1
+version: ${version}
 main: fr.ipazu.advancedrealm.Main
+api-version: 1.21
+folia-supported: true
 commands:
   unclaim:
   claim:
@@ -9,5 +11,11 @@ commands:
   home:
   visit:
   configrealm:
-depends: [SmartInvs,WorldEdit,ARWrapper]
-softdepend: [PlaceholderAPI]
+dependencies:
+  server:
+    WorldEdit:
+      required: false
+      load: BEFORE
+    PlaceholderAPI:
+      required: false
+      load: BEFORE

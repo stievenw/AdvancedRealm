@@ -115,7 +115,7 @@ public class InterractEvent implements Listener {
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if (event.getClickedBlock() != null && Realm.getRealmFromLocation(event.getClickedBlock().getLocation()) != null) {
                 Realm realm = Realm.getRealmFromLocation(event.getClickedBlock().getLocation());
-                if (!realm.getRealmMembers().contains(realmPlayer) && event.getClickedBlock().getType() != Material.SIGN && event.getClickedBlock().getType() != Material.WALL_SIGN) {
+                if (!realm.getRealmMembers().contains(realmPlayer) && event.getClickedBlock().getType() != Material.OAK_SIGN && event.getClickedBlock().getType() != Material.OAK_WALL_SIGN) {
                     event.setCancelled(true);
                 }
                 if (realm.getRealmMembers().contains(realmPlayer) && event.getClickedBlock().getType() == Material.CHEST && realmPlayer.getRankByRealm(realm) == RealmRank.MEMBER) {
@@ -150,7 +150,7 @@ public class InterractEvent implements Listener {
             if (player.getLocation().getBlockY() <= -1) {
                 realm.teleportToSpawn(player);
             }
-            if (player.getLocation().getBlock().getType() == Material.PORTAL) {
+            if (player.getLocation().getBlock().getType() == Material.NETHER_PORTAL) {
                 new ConfigFiles().sendToSpawn(player);
             }
         }

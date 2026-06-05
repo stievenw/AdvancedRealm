@@ -101,7 +101,8 @@ public class ConfigFiles {
     }
 
     public void setRealmchest(Inventory inv) {
-        Config.CONFIG.getConfig().set("realmchest", InventorySerialization.toBase64(inv));
+        realmchest = inv;
+        Config.CONFIG.getConfig().set("config.chest", InventorySerialization.toBase64(inv));
         try {
             Config.CONFIG.getConfig().save(Config.CONFIG.getFile());
         } catch (Exception ex) {

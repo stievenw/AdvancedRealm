@@ -93,7 +93,7 @@ messages:
     nobreak: "&cYou don't have the permission to break here"
     nointeract: "&cYou don't have the permission to interact in this realm"
     nochest: "&cYou don't have the permission to open the chests of this realm"
-    notinrealm: "&cYou are not in this realm"
+    notinrealm: "&cYou cannot do that!"
   realmcommands:
       invite:
         selfinvite: "&cYou cannot invite yourself !"

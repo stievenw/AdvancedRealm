@@ -6,6 +6,7 @@ import fr.ipazu.advancedrealm.realm.RealmLevel;
 import fr.ipazu.advancedrealm.realm.themes.ThemeConfig;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -177,6 +178,13 @@ public class ConfigFiles {
             if (Bukkit.getWorld(worldName) == null) {
                 WorldCreator wc = WorldCreator.name(worldName)
                     .environment(World.Environment.NORMAL);
+                if (worldName.equals(realmWorldName)) {
+                    wc.generator(new ChunkGenerator() {
+                        @Override
+                        public void generateSurface(org.bukkit.generator.WorldInfo worldInfo, java.util.Random random, int chunkX, int chunkZ, ChunkGenerator.ChunkData chunkData) {
+                        }
+                    });
+                }
                 World world = wc.createWorld();
                 if (world != null) {
                     Main.getInstance().getLogger().info("World '" + worldName + "' created/loaded successfully.");

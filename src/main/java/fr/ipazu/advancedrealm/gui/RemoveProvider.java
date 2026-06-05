@@ -8,6 +8,7 @@ import fr.minuskube.inv.content.InventoryContents;
 import fr.minuskube.inv.content.InventoryProvider;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,7 +16,7 @@ import java.util.Collections;
 public class RemoveProvider implements InventoryProvider {
     private Player player;
     private Realm realm;
-    private ClickableItem yes,no;
+    private ClickableItem yes,no,basic;
 
     public RemoveProvider(Player player, Realm realm) {
         this.player = player;
@@ -38,11 +39,14 @@ public class RemoveProvider implements InventoryProvider {
             player.playSound(player.getLocation(), org.bukkit.Sound.UI_BUTTON_CLICK, 1, 1);
             e.getWhoClicked().closeInventory();
         });
+
+        basic = ClickableItem.of(new ItemStack(Material.GRAY_STAINED_GLASS_PANE,1,(byte) 15), e -> e.setCancelled(true));
     }
 
 
     @Override
     public void init(Player player, InventoryContents inventoryContents) {
+        inventoryContents.fill(basic);
         inventoryContents.set(1,2,yes);
         inventoryContents.set(1,6,no);
     }

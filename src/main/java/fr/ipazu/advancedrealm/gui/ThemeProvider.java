@@ -36,6 +36,8 @@ public class ThemeProvider implements InventoryProvider {
         }
         @Override
         public void init(Player player, InventoryContents inventoryContents) {
+            ClickableItem basic = ClickableItem.of(new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1, (byte) 15), e -> e.setCancelled(true));
+            inventoryContents.fill(basic);
             for(ThemeType t : avaibletheme){
                 setItem(inventoryContents,ClickableItem.of(t.getItem(),e ->{
                     realm.getTheme().setThemeType(t);
@@ -63,9 +65,11 @@ public class ThemeProvider implements InventoryProvider {
         private void setItem(InventoryContents inventoryContents, ClickableItem clickableItem) {
             SlotIterator iterator = inventoryContents.newIterator(SlotIterator.Type.HORIZONTAL, 0, 0);
             while (!iterator.ended()) {
-                if (!iterator.get().isPresent()) {
-                    inventoryContents.set(iterator.row(), iterator.column(), clickableItem);
-                    return;
+                if (iterator.get().isPresent()) {
+                    if (iterator.get().get().getItem().getType() == Material.GRAY_STAINED_GLASS_PANE) {
+                        inventoryContents.set(iterator.row(), iterator.column(), clickableItem);
+                        return;
+                    }
                 }
                 iterator.next();
             }

@@ -11,6 +11,7 @@ import fr.minuskube.inv.content.InventoryContents;
 import fr.minuskube.inv.content.InventoryProvider;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 
@@ -18,7 +19,7 @@ public class PerkProvider implements InventoryProvider{
     private Player player;
     private RealmPlayer realmPlayer;
     private Realm realm;
-    private ClickableItem xp,crops,cancel;
+    private ClickableItem xp,crops,basic,cancel;
 
     public PerkProvider(Player player,RealmPlayer realmPlayer) {
         this.player = player;
@@ -49,11 +50,14 @@ public class PerkProvider implements InventoryProvider{
             player.playSound(player.getLocation(), org.bukkit.Sound.UI_BUTTON_CLICK, 1, 1);
             new WholeGUI().getPerkGui(player,realmPlayer).close(player);
         });
+
+        basic = ClickableItem.of(new ItemStack(Material.GRAY_STAINED_GLASS_PANE,1,(byte) 15), e -> e.setCancelled(true));
     }
 
 
     @Override
     public void init(Player player, InventoryContents inventoryContents) {
+        inventoryContents.fill(basic);
         inventoryContents.set(0,2,xp);
         inventoryContents.set(0,6,crops);
         inventoryContents.set(0,8,cancel);

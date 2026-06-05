@@ -29,6 +29,8 @@ public class MembersProvider implements InventoryProvider {
 
     @Override
     public void init(Player player, InventoryContents inventoryContents) {
+        ClickableItem basic = ClickableItem.of(new ItemStack(Material.GRAY_STAINED_GLASS_PANE,1,(byte) 15), e -> e.setCancelled(true));
+        inventoryContents.fill(basic);
         for (RealmPlayer rp : realm.getRealmMembers()) {
             setItem(inventoryContents,ClickableItem.of(ItemsUtils.getHead(rp.getName(), Config.getStringWithReplacementPlayer(config.getString("gui.membersgui.player.name"),realm,rp), Config.getListWithReplacementPlayer(config.getStringList("gui.membersgui.player.lore"),realm,rp)),e ->{
                 e.setCancelled(true);
@@ -47,9 +49,11 @@ public class MembersProvider implements InventoryProvider {
     private void setItem(InventoryContents inventoryContents,ClickableItem clickableItem) {
         SlotIterator iterator = inventoryContents.newIterator(SlotIterator.Type.HORIZONTAL,0,0);
         while(!iterator.ended()){
-            if(!iterator.get().isPresent()){
-                inventoryContents.set(iterator.row(),iterator.column(),clickableItem);
-                return;
+            if(iterator.get().isPresent()){
+                if(iterator.get().get().getItem().getType() == Material.GRAY_STAINED_GLASS_PANE){
+                    inventoryContents.set(iterator.row(),iterator.column(),clickableItem);
+                    return;
+                }
             }
             iterator.next();
         }

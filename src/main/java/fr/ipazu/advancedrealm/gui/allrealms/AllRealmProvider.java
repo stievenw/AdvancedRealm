@@ -32,7 +32,7 @@ public class AllRealmProvider implements InventoryProvider {
     public void init(Player player, InventoryContents inventoryContents) {
         Pagination pagination = inventoryContents.pagination();
         int i = 0;
-        ClickableItem basic = ClickableItem.of(new ItemStack(Material.AIR), e -> e.setCancelled(true));
+        ClickableItem basic = ClickableItem.of(new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1, (byte) 15), e -> e.setCancelled(true));
         if (realmPlayer.getAllRealm().size() <= 27)
             inventoryContents.fill(basic);
         List<Realm> realms = realmPlayer.getAllRealm();
@@ -92,7 +92,7 @@ public class AllRealmProvider implements InventoryProvider {
     public void placeIfVoid(ClickableItem clickableItem, InventoryContents inventoryContents) {
         SlotIterator iterator = inventoryContents.newIterator(SlotIterator.Type.HORIZONTAL, 0, 0);
         while (!iterator.ended()) {
-            if (!iterator.get().isPresent() || iterator.get().get().getItem().getType() == Material.AIR) {
+            if (iterator.get().isPresent() && iterator.get().get().getItem().getType() == Material.GRAY_STAINED_GLASS_PANE) {
                 inventoryContents.set(iterator.row(), iterator.column(), clickableItem);
                 return;
             }

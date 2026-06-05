@@ -31,6 +31,8 @@ public class BannedProvider implements InventoryProvider {
 
     @Override
     public void init(Player player, InventoryContents inventoryContents) {
+        ClickableItem basic = ClickableItem.of(new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1, (byte) 15), e -> e.setCancelled(true));
+        inventoryContents.fill(basic);
         for (RealmPlayer rp : realm.getBanned()) {
             setItem(inventoryContents, ClickableItem.of(ItemsUtils.getHead(rp.getName(), "§b" + rp.getName(), Arrays.asList("", "§eClick to unban " + rp.getName())), e -> {
                 e.setCancelled(true);
@@ -59,9 +61,11 @@ public class BannedProvider implements InventoryProvider {
     private void setItem(InventoryContents inventoryContents, ClickableItem clickableItem) {
         SlotIterator iterator = inventoryContents.newIterator(SlotIterator.Type.HORIZONTAL, 0, 0);
         while (!iterator.ended()) {
-            if (!iterator.get().isPresent()) {
-                inventoryContents.set(iterator.row(), iterator.column(), clickableItem);
-                return;
+            if (iterator.get().isPresent()) {
+                if (iterator.get().get().getItem().getType() == Material.GRAY_STAINED_GLASS_PANE) {
+                    inventoryContents.set(iterator.row(), iterator.column(), clickableItem);
+                    return;
+                }
             }
             iterator.next();
         }

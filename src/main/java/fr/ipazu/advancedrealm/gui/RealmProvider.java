@@ -21,7 +21,7 @@ import java.util.Arrays;
 public class RealmProvider implements InventoryProvider {
     private Player player;
     private Realm realm;
-    private ClickableItem banned, teleport, theme, upgrade, members, privacy, back;
+    private ClickableItem banned, teleport, theme, upgrade, members, privacy, basic, back;
     private boolean from;
     private YamlConfiguration config;
 
@@ -118,11 +118,13 @@ public class RealmProvider implements InventoryProvider {
                 player.closeInventory();
                 new WholeGUI().openAllRealmGUI(player);
             });
+            basic = ClickableItem.of(new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1, (byte) 15), e -> e.setCancelled(true));
         }
     }
 
     @Override
     public void init(Player player, InventoryContents inventoryContents) {
+        inventoryContents.fill(basic);
         inventoryContents.set(Config.getRowFromInt(config.getInt("gui.realmgui.home.slot")), Config.getCollumFromInt(config.getInt("gui.realmgui.home.slot")), teleport);
         inventoryContents.set(Config.getRowFromInt(config.getInt("gui.realmgui.privacy.slot")), Config.getCollumFromInt(config.getInt("gui.realmgui.privacy.slot")), privacy);
         inventoryContents.set(Config.getRowFromInt(config.getInt("gui.realmgui.upgrade.slot")), Config.getCollumFromInt(config.getInt("gui.realmgui.upgrade.slot")), upgrade);

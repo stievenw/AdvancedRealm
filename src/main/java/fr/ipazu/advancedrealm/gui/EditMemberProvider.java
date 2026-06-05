@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,7 +22,7 @@ public class EditMemberProvider implements InventoryProvider {
     private Realm realm;
     private Player player;
     private RealmPlayer realmplayer;
-    private ClickableItem ban,kick,member,guard,manager,retour;
+    private ClickableItem ban,kick,member,guard,manager,basic,retour;
 
     public EditMemberProvider(Player player, Realm realm,RealmPlayer vised) {
         this.player = player;
@@ -159,11 +160,13 @@ public class EditMemberProvider implements InventoryProvider {
             player.closeInventory();
             new WholeGUI().openMembersGui(player,realm);
         });
+        basic = ClickableItem.of(new ItemStack(Material.GRAY_STAINED_GLASS_PANE,1,(byte) 15), e -> e.setCancelled(true));
     }
 
 
     @Override
     public void init(Player player, InventoryContents inventoryContents) {
+        inventoryContents.fill(basic);
         inventoryContents.set(1,2,member);
         inventoryContents.set(1,4,guard);
         inventoryContents.set(1,6,manager);

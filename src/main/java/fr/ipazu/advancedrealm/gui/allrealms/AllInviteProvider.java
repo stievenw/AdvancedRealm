@@ -103,8 +103,6 @@ public class AllInviteProvider implements InventoryProvider {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        if(!vised.realmwaiting.contains(r))
-                            cancel();
                         vised.removeWaiting(r);
                     }
                 }.runTaskLater(Main.getInstance(), 20 * 120);

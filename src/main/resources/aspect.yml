@@ -1,7 +1,7 @@
 gui:
   realmgui:
     home:
-      item: dark_oak_door_item
+      item: DARK_OAK_DOOR
       data: 0
       name: "&bTeleport to Realm"
       slot: 11
@@ -10,7 +10,7 @@ gui:
         - "&7Teleport to %realm_name%'s Realm."
       clickmessage: "&aTeleporting to the realm..."
     privacy:
-      item: wood_sword
+      item: WOODEN_SWORD
       data: 0
       name: "&bToogle Privacy: &3%realm_privacy%"
       slot: 13
@@ -21,7 +21,7 @@ gui:
         - "&cPrivate &8- &7No one can visit your Realm."
       clickmessage: "&aRealm visibility succefully changed to &b%realm_privacy%"
     banned:
-      item: barrier
+      item: BARRIER
       data: 0
       name: "&bBanned Players"
       slot: 33
@@ -29,7 +29,7 @@ gui:
         - ""
         - "&7View and manage players that have been banned from this Realm."
     members:
-      item: skull_item
+      item: PLAYER_HEAD
       data: 3
       name: "&bMembers"
       slot: 31
@@ -37,7 +37,7 @@ gui:
         - ""
         - "&7View and manage the members of this realm."
     theme:
-      item: painting
+      item: PAINTING
       data: 0
       name: "&bSpawn Themes"
       slot: 29
@@ -45,7 +45,7 @@ gui:
         - ""
         - "&7Customize your Realms spawn point with different themes."
     upgrade:
-      item: dirt
+      item: DIRT
       data: 0
       name: "&bUpgrade Build Size"
       slot: 15
@@ -76,7 +76,7 @@ gui:
         - ""
         - "&eClick to edit %player_name%'s permissions."
   back:
-    item: bed
+    item: RED_BED
     data: 0
     name: "⬅ &bGo back"
     slot: 45
@@ -85,7 +85,7 @@ gui:
         - "&7Click to go back to the"
         - "&7Realm options."
   default:
-    item: stained_glass_pane
+    item: BLACK_STAINED_GLASS_PANE
     data: 15
 messages:
   interact:

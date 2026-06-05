@@ -76,7 +76,7 @@ public class RealmCommand implements CommandExecutor {
                                 cb.append("§a to join! You have §d120 seconds §ato accept");
                                 visedplayer.spigot().sendMessage(cb.create());
                                 player.sendMessage(Config.getStringWithReplacementPlayer(config.getString("messages.realmcommands.invite.msgsent"),owned,vised));
-                                Bukkit.getGlobalRegionScheduler().runDelayed(Main.getInstance(), (t) -> {
+                                Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
                                     vised.removeWaiting(rp.getOwned());
                                 }, 20 * 120);
                             }
@@ -337,7 +337,7 @@ public class RealmCommand implements CommandExecutor {
     private void useless()
     {
         ArrayList<String> strs = new ArrayList<>();
-        strs.forEach(System.out::println);
+        strs.forEach(s -> Main.getInstance().getLogger().info(s));
     }
 }
 

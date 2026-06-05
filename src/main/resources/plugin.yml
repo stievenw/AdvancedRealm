@@ -3,7 +3,6 @@ author: iPazu
 version: ${version}
 main: fr.ipazu.advancedrealm.Main
 api-version: 1.21
-folia-supported: true
 commands:
   unclaim:
   claim:

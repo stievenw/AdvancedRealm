@@ -2,6 +2,10 @@ package fr.ipazu.advancedrealm;
 
 import fr.ipazu.advancedrealm.commands.*;
 import fr.ipazu.advancedrealm.events.EventManager;
+import fr.minuskube.inv.InventoryManager;
+import fr.minuskube.inv.SmartInvsPlugin;
+
+import java.lang.reflect.Field;
 import fr.ipazu.advancedrealm.realm.Realm;
 import fr.ipazu.advancedrealm.utils.ARExpansion;
 import fr.ipazu.advancedrealm.utils.ConfigFiles;
@@ -17,6 +21,7 @@ public class Main extends JavaPlugin {
     private static Main instance;
     public Economy economy = null;
     public static Metrics metrics;
+    private InventoryManager invManager;
 
     public static Main getInstance() {
         return instance;
@@ -25,6 +30,17 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+
+        invManager = new InventoryManager(this);
+        invManager.init();
+        try {
+            Field managerField = SmartInvsPlugin.class.getDeclaredField("invManager");
+            managerField.setAccessible(true);
+            managerField.set(null, invManager);
+        } catch (Exception e) {
+            getLogger().severe("Failed to initialize SmartInvs manager");
+        }
+
         if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
             new ARExpansion(this).register();
         }
@@ -63,6 +79,6 @@ public class Main extends JavaPlugin {
                 return Realm.allrealm.size();
             }
         }));
-        System.out.println("[AdvancedRealm] Metrics successfully pushed (" + Realm.allrealm.size() + " realms)");
+        getLogger().info("Metrics successfully pushed (" + Realm.allrealm.size() + " realms)");
     }
 }

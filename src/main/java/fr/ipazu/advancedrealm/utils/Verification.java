@@ -1,8 +1,10 @@
 package fr.ipazu.advancedrealm.utils;
 
+import fr.ipazu.advancedrealm.Main;
+
 public class Verification {
 
     public static void check() {
-        System.out.println("[AdvancedRealm] License check bypassed");
+        Main.getInstance().getLogger().info("License check bypassed");
     }
 }

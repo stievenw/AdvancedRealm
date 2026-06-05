@@ -1,5 +1,7 @@
 package fr.ipazu.advancedrealm.utils;
 
+import fr.ipazu.advancedrealm.Main;
+
 public class DataBaseUtils {
 
     public DataBaseUtils() {
@@ -7,6 +9,6 @@ public class DataBaseUtils {
     }
 
     public void checkLicense(){
-        System.out.println("[advancedrealm] License check bypassed");
+        Main.getInstance().getLogger().info("License check bypassed");
     }
 }

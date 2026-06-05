@@ -1,5 +1,6 @@
 package fr.ipazu.advancedrealm.events;
 
+import fr.ipazu.advancedrealm.Main;
 import fr.ipazu.advancedrealm.realm.Realm;
 import fr.ipazu.advancedrealm.realm.RealmPlayer;
 import fr.ipazu.advancedrealm.realm.RealmRank;
@@ -254,6 +255,6 @@ public class InterractEvent implements Listener {
 
     private void useless() {
         ArrayList<String> strs = new ArrayList<>();
-        strs.forEach(System.out::println);
+        strs.forEach(s -> Main.getInstance().getLogger().info(s));
     }
 }

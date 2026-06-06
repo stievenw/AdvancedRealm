@@ -12,6 +12,26 @@ themes:
 config:
   #The space beetween each realm
   spacing: 500
+  #Realm type: ISLAND (void world, schematic pasted, spawn area protected) or WORLD (normal terrain, full owner control)
+  realm-type: ISLAND
+  #Default biome used for the realm world (only applies when realm-type is WORLD)
+  world-biome: PLAINS
+  #Available biomes for players to choose when claiming a WORLD realm (each biome gets its own world)
+  biomes:
+    - PLAINS
+    - DESERT
+    - FOREST
+    - TAIGA
+    - SWAMP
+    - JUNGLE
+    - BADLANDS
+    - SAVANNA
+    - SNOWY_PLAINS
+    - BIRCH_FOREST
+    - DARK_FOREST
+    - FLOWER_FOREST
+    - MEADOW
+    - CHERRY_GROVE
   #The world where realms will be created
   world: AdvancedRealmWorld
   spawn:

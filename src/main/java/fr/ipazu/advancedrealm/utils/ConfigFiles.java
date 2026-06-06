@@ -3,10 +3,14 @@ package fr.ipazu.advancedrealm.utils;
 import fr.ipazu.advancedrealm.Main;
 import fr.ipazu.advancedrealm.realm.RealmConfig;
 import fr.ipazu.advancedrealm.realm.RealmLevel;
+import fr.ipazu.advancedrealm.realm.RealmType;
 import fr.ipazu.advancedrealm.realm.themes.ThemeConfig;
 import org.bukkit.*;
+import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.ChunkGenerator;
+import org.bukkit.generator.WorldInfo;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -17,7 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
+import java.util.*;
 import java.util.logging.Level;
 
 public class ConfigFiles {
@@ -25,6 +29,9 @@ public class ConfigFiles {
     private static Inventory realmchest;
     private static World realmworld;
     private static long cooldown;
+    private static RealmType realmType;
+    private static Biome realmBiome;
+    private static List<Biome> availableBiomes = new ArrayList<>();
 
     private void checkFolder() {
         if (!Main.getInstance().getDataFolder().exists())
@@ -51,6 +58,16 @@ public class ConfigFiles {
     public void loadConfig() {
         YamlConfiguration config = Config.CONFIG.getConfig();
         loadWorlds(config);
+        realmType = RealmType.valueOf(config.getString("config.realm-type", "ISLAND").toUpperCase());
+        realmBiome = Biome.valueOf(config.getString("config.world-biome", "PLAINS").toUpperCase());
+        availableBiomes.clear();
+        for (String b : config.getStringList("config.biomes")) {
+            try {
+                availableBiomes.add(Biome.valueOf(b.toUpperCase()));
+            } catch (Exception e) {
+                Main.getInstance().getLogger().warning("Invalid biome in config.biomes: " + b);
+            }
+        }
         spawn = new Location(Bukkit.getWorld(config.getString("config.spawn.world")), config.getInt("config.spawn.x"), config.getInt("config.spawn.y"), config.getInt("config.spawn.z"), (float) config.getInt("config.spawn.yaw"), (float) config.getInt("config.spawn.pitch"));
         realmworld = Bukkit.getWorld(config.getString("config.world"));
         if (config.getString("config.chest") != null) {
@@ -125,6 +142,45 @@ public class ConfigFiles {
         return realmworld;
     }
 
+    public static RealmType getRealmType() {
+        return realmType;
+    }
+
+    public static Biome getRealmBiome() {
+        return realmBiome;
+    }
+
+    public static List<Biome> getAvailableBiomes() {
+        return availableBiomes.isEmpty() ? Collections.singletonList(realmBiome) : availableBiomes;
+    }
+
+    public static World getOrCreateWorldForBiome(Biome biome) {
+        String worldName = getBiomeWorldName(biome);
+        World world = Bukkit.getWorld(worldName);
+        if (world != null) return world;
+
+        WorldCreator wc = WorldCreator.name(worldName).environment(World.Environment.NORMAL);
+        wc.biomeProvider(new BiomeProvider() {
+            @Override
+            public Biome getBiome(WorldInfo worldInfo, int x, int y, int z) {
+                return biome;
+            }
+            @Override
+            public List<Biome> getBiomes(WorldInfo worldInfo) {
+                return Collections.singletonList(biome);
+            }
+        });
+        world = wc.createWorld();
+        if (world != null) {
+            Main.getInstance().getLogger().info("Created biome world: " + worldName);
+        }
+        return world;
+    }
+
+    private static String getBiomeWorldName(Biome biome) {
+        return Config.CONFIG.getConfig().getString("config.world") + "_" + biome.name().toLowerCase();
+    }
+
     public static long getCooldownValue() {
         return cooldown;
     }
@@ -179,11 +235,24 @@ public class ConfigFiles {
                 WorldCreator wc = WorldCreator.name(worldName)
                     .environment(World.Environment.NORMAL);
                 if (worldName.equals(realmWorldName)) {
-                    wc.generator(new ChunkGenerator() {
-                        @Override
-                        public void generateSurface(org.bukkit.generator.WorldInfo worldInfo, java.util.Random random, int chunkX, int chunkZ, ChunkGenerator.ChunkData chunkData) {
-                        }
-                    });
+                    if (realmType == RealmType.ISLAND) {
+                        wc.generator(new ChunkGenerator() {
+                            @Override
+                            public void generateSurface(org.bukkit.generator.WorldInfo worldInfo, java.util.Random random, int chunkX, int chunkZ, ChunkGenerator.ChunkData chunkData) {
+                            }
+                        });
+                    } else if (realmType == RealmType.WORLD) {
+                        wc.biomeProvider(new BiomeProvider() {
+                            @Override
+                            public Biome getBiome(WorldInfo worldInfo, int x, int y, int z) {
+                                return realmBiome;
+                            }
+                            @Override
+                            public List<Biome> getBiomes(WorldInfo worldInfo) {
+                                return Collections.singletonList(realmBiome);
+                            }
+                        });
+                    }
                 }
                 World world = wc.createWorld();
                 if (world != null) {

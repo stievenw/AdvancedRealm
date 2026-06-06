@@ -12,6 +12,15 @@ public class WholeGUI {
 
     }
 
+    public void openBiomeGUI(Player player, RealmPlayer realmPlayer) {
+        SmartInventory inventory = SmartInventory.builder()
+                .provider(new BiomeProvider(player, realmPlayer))
+                .size(6, 9)
+                .title("Select a Biome")
+                .build();
+        inventory.open(player);
+    }
+
     public void openRealmGui(Player player, Realm realm,boolean from) {
         SmartInventory inventory = SmartInventory.builder()
                 .provider(new RealmProvider(player, realm,from))

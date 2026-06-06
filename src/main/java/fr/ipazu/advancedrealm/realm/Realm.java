@@ -10,6 +10,7 @@ import fr.ipazu.advancedrealm.utils.WorldBorder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
@@ -138,6 +139,25 @@ public class Realm {
     }
 
     public void fillChest() {
+        if (ConfigFiles.getRealmType() == RealmType.WORLD) {
+            Location chestLoc = theme.getSpawn().clone().add(1, 0, 0);
+            chestLoc.getBlock().setType(Material.CHEST);
+            Chest chest = (Chest) chestLoc.getBlock().getState();
+            if (ConfigFiles.getRealmchest() == null) {
+                chest.getBlockInventory().setItem(2, new ItemStack(Material.CARROT));
+                chest.getBlockInventory().setItem(3, new ItemStack(Material.SUGAR_CANE));
+                chest.getBlockInventory().setItem(5, new ItemStack(Material.MELON));
+                chest.getBlockInventory().setItem(6, new ItemStack(Material.ICE));
+                chest.getBlockInventory().setItem(13, new ItemStack(Material.TORCH, 8));
+                chest.getBlockInventory().setItem(20, new ItemStack(Material.POTATO));
+                chest.getBlockInventory().setItem(21, new ItemStack(Material.CACTUS));
+                chest.getBlockInventory().setItem(23, new ItemStack(Material.PUMPKIN));
+                chest.getBlockInventory().setItem(24, new ItemStack(Material.LAVA_BUCKET));
+            } else {
+                chest.getBlockInventory().setContents(ConfigFiles.getRealmchest().getContents());
+            }
+            return;
+        }
 
         for (Block block : cuboid.getBlocks()) {
             if (block.getLocation().getChunk().isLoaded()) {
@@ -175,6 +195,7 @@ public class Realm {
     }
 
     public void pasteIsland() {
+        if (ConfigFiles.getRealmType() == RealmType.WORLD) return;
         if (Bukkit.getPluginManager().getPlugin("WorldEdit") == null) {
             Main.getInstance().getLogger().warning("WorldEdit not found. Install WorldEdit to enable schematic pasting.");
             return;
@@ -202,6 +223,7 @@ public class Realm {
         }
         new RealmConfig().delete(this);
         new RealmConfig().removeVotes(this);
+        if (ConfigFiles.getRealmType() == RealmType.ISLAND) {
             for (Block block : cuboid.getBlocks()) {
                 block.setType(Material.AIR);
             }
@@ -210,6 +232,7 @@ public class Realm {
                     entity.remove();
                 }
             }
+        }
     }
 
     public void demote(RealmPlayer player) {
@@ -292,6 +315,10 @@ public class Realm {
 
     public CuboidUtils getCuboid() {
         return cuboid;
+    }
+
+    public World getWorld() {
+        return theme.getSpawn().getWorld();
     }
 
     public int getVote() {

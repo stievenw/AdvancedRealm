@@ -4,8 +4,11 @@ package fr.ipazu.advancedrealm.realm;
 import com.google.common.collect.Iterables;
 import fr.ipazu.advancedrealm.Main;
 import fr.ipazu.advancedrealm.realm.themes.ThemeType;
+import fr.ipazu.advancedrealm.utils.Config;
 import fr.ipazu.advancedrealm.utils.ConfigFiles;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -13,6 +16,7 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class RealmConfig {
     private File file = new File(Main.getInstance().getDataFolder(), "realm.yml");
@@ -37,6 +41,7 @@ public class RealmConfig {
         config.set("realms." + realm.getOwner().getUniqueId() + ".theme.spawn.z", realm.getTheme().getSpawn().getBlockZ());
         config.set("realms." + realm.getOwner().getUniqueId() + ".theme.spawn.yaw", realm.getTheme().getSpawn().getYaw());
         config.set("realms." + realm.getOwner().getUniqueId() + ".theme.spawn.pitch", realm.getTheme().getSpawn().getPitch());
+        config.set("realms." + realm.getOwner().getUniqueId() + ".theme.spawn.world", realm.getWorld().getName());
         try {
             config.save(file);
         } catch (Exception e) {
@@ -185,7 +190,10 @@ public class RealmConfig {
                         new RealmPlayer(s, config.getString("realms." + name + ".players." + s + ".name"));
                 }
             }
-            Location spawn = new Location(ConfigFiles.getWorld(),
+            String worldName = config.getString("realms." + name + ".theme.spawn.world");
+            World world = worldName != null ? Bukkit.getWorld(worldName) : ConfigFiles.getWorld();
+            if (world == null) world = ConfigFiles.getWorld();
+            Location spawn = new Location(world,
                 config.getInt("realms." + name + ".theme.spawn.x"),
                 config.getInt("realms." + name + ".theme.spawn.y"),
                 config.getInt("realms." + name + ".theme.spawn.z"),
@@ -297,11 +305,41 @@ public class RealmConfig {
     }
 
     public Location getNewLocation() {
-        int i = Realm.allrealm.size() % 20;
-        if (i == 0 && Realm.allrealm.size() != 0)
-            return getLastLocation().clone().add(-getLastLocation().getX(), 0, ConfigFiles.getRealmspacing());
-        else
-            return getLastLocation().clone().add(ConfigFiles.getRealmspacing(), 0, 0);
+        return getNewLocation(ConfigFiles.getWorld());
+    }
+
+    public Location getNewLocation(World world) {
+        int spacing = ConfigFiles.getRealmspacing();
+        Random rand = new Random();
+        int margin = 50;
+
+        if (ConfigFiles.getRealmType() == RealmType.ISLAND) {
+            if (Realm.allrealm.isEmpty()) {
+                return new Location(world, spacing, 66, 0);
+            }
+            Location last = getLastLocation();
+            int i = Realm.allrealm.size() % 20;
+            if (i == 0)
+                return last.clone().add(-last.getX(), 0, spacing);
+            else
+                return last.clone().add(spacing, 0, 0);
+        }
+        if (Realm.allrealm.isEmpty()) {
+            int x = spacing + margin + rand.nextInt(spacing - 2 * margin);
+            int z = margin + rand.nextInt(spacing - 2 * margin);
+            return new Location(world, x, 100, z);
+        }
+        int count = 0;
+        for (Realm r : Realm.allrealm) {
+            if (r.getWorld().getName().equals(world.getName())) count++;
+        }
+        int col = count % 20;
+        int row = count / 20;
+        int baseX = spacing * (col + 1);
+        int baseZ = spacing * row;
+        int x = baseX + margin + rand.nextInt(spacing - 2 * margin);
+        int z = baseZ + margin + rand.nextInt(spacing - 2 * margin);
+        return new Location(world, x, 100, z);
     }
 
     public void updateVote(Realm realm) {

@@ -50,7 +50,7 @@ public class RealmProvider implements InventoryProvider {
 
         privacy = ClickableItem.of(new ItemsUtils(Config.getMaterial(config.getString("gui.realmgui.privacy.item")), Config.getStringWithReplacementRealm(config.getString("gui.realmgui.privacy.name"),realm), (byte) config.getInt("gui.realmgui.privacy.data") ,Config.getListWithReplacementRealm(config.getStringList("gui.realmgui.privacy.lore"),realm)).toItemStack(), e -> {
             e.setCancelled(true);
-            player.playSound(player.getLocation(), org.bukkit.Sound.UI_BUTTON_CLICK, 1, 1);
+            player.playSound(player.getLocation(), org.bukkit.Sound.BLOCK_LEVER_CLICK, 1, 1);
             if (RealmPlayer.getPlayer(player.getUniqueId().toString()).getRankByRealm(realm) == RealmRank.MANAGER || RealmPlayer.getPlayer(player.getUniqueId().toString()).getRankByRealm(realm) == RealmRank.OWNER) {
                 realm.setPrivacy(!realm.getPrivacy());
                 player.sendMessage(Config.getStringWithReplacementRealm(config.getString("gui.realmgui.privacy.clickmessage"),realm));
@@ -74,9 +74,9 @@ public class RealmProvider implements InventoryProvider {
         });
         if (realm.getLevel().getNumber() >= 20) {
             upgrade = ClickableItem.of(new ItemsUtils(Config.getMaterial(config.getString("gui.realmgui.upgrade.item")), Config.getStringWithReplacementRealm(config.getString("gui.realmgui.upgrade.name"),realm), (byte) config.getInt("gui.realmgui.upgrade.data"), Config.getListWithReplacementRealm(config.getStringList("gui.realmgui.upgrade.maxlevellore"),realm)).toItemStack(), e -> {
-                player.sendMessage("§cThis realm is already at max level.");
                 e.setCancelled(true);
-                player.playSound(player.getLocation(), org.bukkit.Sound.UI_BUTTON_CLICK, 1, 1);
+                player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_VILLAGER_NO, 1, 1);
+                player.sendMessage("§cThis realm is already at max level.");
                 player.closeInventory();
             });
 
@@ -86,30 +86,26 @@ public class RealmProvider implements InventoryProvider {
             if (!Main.getInstance().setupEconomy()) {
                 upgrade = ClickableItem.of(new ItemsUtils(Material.BARRIER, "§cUpgrade unavailable", (byte) 0, Arrays.asList("§7This feature is currently disabled.")).toItemStack(), e -> {
                     e.setCancelled(true);
-                    player.playSound(player.getLocation(), org.bukkit.Sound.UI_BUTTON_CLICK, 1, 1);
+                    player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_VILLAGER_NO, 1, 1);
                     player.sendMessage("§cThis feature is currently unavailable.");
                 });
             } else {
                 upgrade = ClickableItem.of(new ItemsUtils(Config.getMaterial(config.getString("gui.realmgui.upgrade.item")), Config.getStringWithReplacementRealm(config.getString("gui.realmgui.upgrade.name"),realm), (byte) config.getInt("gui.realmgui.upgrade.data"), Config.getListWithReplacementRealm(config.getStringList("gui.realmgui.upgrade.lore"),realm)).toItemStack(), e -> {
                     e.setCancelled(true);
-                    player.playSound(player.getLocation(), org.bukkit.Sound.UI_BUTTON_CLICK, 1, 1);
                     if (RealmPlayer.getPlayer(player.getUniqueId().toString()).getRankByRealm(realm) == RealmRank.MEMBER || RealmPlayer.getPlayer(player.getUniqueId().toString()).getRankByRealm(realm) == RealmRank.GUARD) {
+                        player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_VILLAGER_NO, 1, 1);
                         player.sendMessage("§cOnly the manager and the owner of the Realm can do this !");
                         return;
                     }
                     if (Main.getInstance().economy.getBalance(player) < nextlevel.getPrice()) {
+                        player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_VILLAGER_NO, 1, 1);
                         player.sendMessage("§cYou don't have enough money to do upgrade your Realm.");
                         player.sendMessage("§cYou have §6" + Main.getInstance().economy.getBalance(player) + " §cand you need §6" + nextlevel.getPrice());
                         return;
                     }
-
-                    Main.getInstance().economy.withdrawPlayer(player, nextlevel.getPrice());
-                    realm.upgrade(realm.getLevel().getNumber() + 1);
-                    for (RealmPlayer s : realm.getRealmMembers()) {
-                        if (Bukkit.getPlayer(s.getName()) != null)
-                            Bukkit.getPlayer(s.getName()).sendMessage("§e§l" + player.getName() + " §aupgraded §b§l" + realm.getOwner().getName() + "'s §aRealm to the level §e" + realm.getLevel().getNumber());
-                    }
-                    new WholeGUI().openRealmGui(player, realm, from);
+                    player.playSound(player.getLocation(), org.bukkit.Sound.UI_BUTTON_CLICK, 1, 1);
+                    player.closeInventory();
+                    new WholeGUI().openUpgradeConfirmGui(player, realm);
                 });
             }
             back = ClickableItem.of(new ItemsUtils(Config.getMaterial(config.getString("gui.back.item")), Config.getStringWithReplacementRealm(config.getString("gui.back.name"),realm), (byte) config.getInt("gui.back.data"), Config.getListWithReplacementRealm(config.getStringList("gui.back.lore"),realm)).toItemStack(), e -> {

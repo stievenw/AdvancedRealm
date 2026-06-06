@@ -30,7 +30,7 @@ public class PerkProvider implements InventoryProvider{
     private void setUpItems() {
         xp = ClickableItem.of(new ItemsUtils(Material.EXPERIENCE_BOTTLE, "§bXP multiplicator", Arrays.asList("", "§7Get a 1.5x XP Booster In Your Realm")).toItemStack(), e -> {
             e.setCancelled(true);
-            player.playSound(player.getLocation(), org.bukkit.Sound.UI_BUTTON_CLICK, 1, 1);
+            player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
             new WholeGUI().getPerkGui(player,realmPlayer).close(player);
             createRealm();
             realm.setPerk("xp");
@@ -39,7 +39,7 @@ public class PerkProvider implements InventoryProvider{
 
         crops = ClickableItem.of(new ItemsUtils(Material.WHEAT, "§bBetter Crops", Arrays.asList("", "§7Crops grow faster.")).toItemStack(), e -> {
             e.setCancelled(true);
-            player.playSound(player.getLocation(), org.bukkit.Sound.UI_BUTTON_CLICK, 1, 1);
+            player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
             new WholeGUI().getPerkGui(player,realmPlayer).close(player);
             createRealm();
             realm.setPerk("crops");

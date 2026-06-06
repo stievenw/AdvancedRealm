@@ -27,7 +27,7 @@ public class RemoveProvider implements InventoryProvider {
     private void setUpItems() {
         yes = ClickableItem.of(new ItemsUtils(Material.RED_TERRACOTTA, "§cUnclaim Realm",(byte) 0, Arrays.asList("§7Unclaiming a realm will ", "§7remove your Realm and any ","§7progress on that Realm.")).toItemStack(), e -> {
             e.setCancelled(true);
-            player.playSound(player.getLocation(), org.bukkit.Sound.UI_BUTTON_CLICK, 1, 1);
+            player.playSound(player.getLocation(), org.bukkit.Sound.BLOCK_ANVIL_LAND, 1, 1);
             e.getWhoClicked().closeInventory();
             //new RealmUnclaimEvent(realm, RealmPlayer.getPlayer(player.getUniqueId().toString()),player);
             realm.delete();

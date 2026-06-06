@@ -35,7 +35,7 @@ public class EditMemberProvider implements InventoryProvider {
     private void setUpItems() {
         ban = ClickableItem.of(new ItemsUtils(Material.BARRIER, "§4Ban "+vised.getName(), Collections.singletonList("§7Ban " + vised.getName() + " from this realm")).toItemStack(), e -> {
             e.setCancelled(true);
-            player.playSound(player.getLocation(), org.bukkit.Sound.UI_BUTTON_CLICK, 1, 1);
+            player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_ITEM_BREAK, 1, 1);
             player.closeInventory();
             if(realmplayer.getRankByRealm(realm) == RealmRank.MEMBER || realmplayer.getRankByRealm(realm) == RealmRank.GUARD){
                 player.sendMessage("§cYou don't have the required rank to ban this player of the realm.");
@@ -59,7 +59,7 @@ public class EditMemberProvider implements InventoryProvider {
 
         kick = ClickableItem.of(ItemsUtils.getColoredArmor(Material.LEATHER_BOOTS, Color.RED, "§cKick "+vised.getName(), Collections.singletonList("§7Kick " + vised.getName() + " from this realm")), e -> {
             e.setCancelled(true);
-            player.playSound(player.getLocation(), org.bukkit.Sound.UI_BUTTON_CLICK, 1, 1);
+            player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_ITEM_BREAK, 1, 1);
             player.closeInventory();
             if(realmplayer.getRankByRealm(realm) == RealmRank.MEMBER || realmplayer.getRankByRealm(realm) == RealmRank.GUARD){
                 player.sendMessage("§cYou don't have the required rank to kick this player of the realm.");

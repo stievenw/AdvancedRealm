@@ -42,7 +42,7 @@ public class ThemeProvider implements InventoryProvider {
                 setItem(inventoryContents,ClickableItem.of(t.getItem(),e ->{
                     realm.getTheme().setThemeType(t);
                     realm.getTheme().spawnTheme();
-                    player.playSound(player.getLocation(), org.bukkit.Sound.UI_BUTTON_CLICK, 1, 1);
+                    player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
                     player.sendMessage("§aSuccessfully changed the type to: §e§l"+t.getName());
                     e.setCancelled(true);
                     player.closeInventory();

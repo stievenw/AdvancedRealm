@@ -1,6 +1,7 @@
 package fr.ipazu.advancedrealm.gui;
 
 import fr.ipazu.advancedrealm.Main;
+import org.bukkit.Bukkit;
 import fr.ipazu.advancedrealm.realm.Realm;
 import fr.ipazu.advancedrealm.realm.RealmConfig;
 import fr.ipazu.advancedrealm.realm.RealmPlayer;
@@ -16,6 +17,9 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -85,21 +89,37 @@ public class BiomeProvider implements InventoryProvider {
     }
 
     private void claimRealm(Biome targetBiome) {
-        World world = ConfigFiles.getOrCreateWorldForBiome(targetBiome);
-        Location base = new RealmConfig().getNewLocation(world);
-        Location spawn = new Location(world, base.getBlockX() + 0.5, 100, base.getBlockZ() + 0.5);
+        BossBar bossBar = Bukkit.createBossBar("§6Preparing world...", BarColor.BLUE, BarStyle.SOLID);
+        bossBar.addPlayer(player);
+        bossBar.setProgress(0.05);
 
+        bossBar.setProgress(0.2);
+        World world = ConfigFiles.getOrCreateWorldForBiome(targetBiome);
+
+        bossBar.setProgress(0.35);
+        bossBar.setTitle("§6Scanning for safe location...");
+        Location base = new RealmConfig().getNewLocation(world);
+        Location spawn = base;
+
+        bossBar.setProgress(0.55);
+        bossBar.setTitle("§6Creating realm...");
         Realm realm = new Realm(realmPlayer, ThemeType.allthemeTypes.get(0), spawn, 1, 0);
         realm.pasteIsland();
         realm.fillChest();
         new RealmConfig().updateRealm(realmPlayer.getOwned());
 
+        bossBar.setProgress(0.8);
+        bossBar.setTitle("§6Teleporting...");
         realm.teleportToSpawn(player);
         player.setInvulnerable(true);
+        bossBar.setProgress(1.0);
+        bossBar.setTitle("§aDone!");
+
         new BukkitRunnable() {
             @Override
             public void run() {
                 player.setInvulnerable(false);
+                bossBar.removeAll();
             }
         }.runTaskLater(Main.getInstance(), 60);
         TitleUtils.titlePacket(player, 20, 30, 20, "§bRealm claimed", "§aGo to your Realm with §6/home");

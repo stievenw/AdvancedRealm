@@ -6,6 +6,7 @@ import fr.ipazu.advancedrealm.realm.Realm;
 import fr.ipazu.advancedrealm.realm.RealmConfig;
 import fr.ipazu.advancedrealm.realm.RealmPlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,6 +29,13 @@ public class JoinEvent implements Listener{
                 if (r.getRealmMembers().contains(rp) && r.getCuboid().containsLocation(player.getLocation())) {
                     r.sendWorldBorderPacket(player);
                     break;
+                }
+            }
+            Location bed = player.getBedSpawnLocation();
+            if (bed != null && bed.getWorld().getName().startsWith("AdvancedRealmWorld_")) {
+                Realm realmAtBed = Realm.getRealmFromLocation(bed);
+                if (realmAtBed == null || !realmAtBed.getRealmMembers().contains(rp)) {
+                    player.setBedSpawnLocation(null);
                 }
             }
         }, 3);

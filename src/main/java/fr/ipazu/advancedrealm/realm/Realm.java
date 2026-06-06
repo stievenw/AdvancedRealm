@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
@@ -195,18 +196,45 @@ public class Realm {
     }
 
     public void pasteIsland() {
-        if (ConfigFiles.getRealmType() == RealmType.WORLD) return;
-        if (Bukkit.getPluginManager().getPlugin("WorldEdit") == null) {
-            Main.getInstance().getLogger().warning("WorldEdit not found. Install WorldEdit to enable schematic pasting.");
+        if (ConfigFiles.getRealmType() == RealmType.ISLAND) {
+            if (Bukkit.getPluginManager().getPlugin("WorldEdit") == null) {
+                Main.getInstance().getLogger().warning("WorldEdit not found. Install WorldEdit to enable schematic pasting.");
+                return;
+            }
+            try {
+                File file = new File(Main.getInstance().getDataFolder(), "island.schematic");
+                new SchematicUtils(theme.getSpawn(),file).paste();
+            } catch (Exception e) {
+                Main.getInstance().getLogger().log(java.util.logging.Level.SEVERE, "Failed to load schematic", e);
+            }
             return;
         }
-        try {
-            File file = new File(Main.getInstance().getDataFolder(), "island.schematic");
-            new SchematicUtils(theme.getSpawn(),file).paste();
-            } catch (Exception e) {
-            Main.getInstance().getLogger().log(java.util.logging.Level.SEVERE, "Failed to load schematic", e);
+        Biome biome = theme.getSpawn().getWorld().getBiome(theme.getSpawn().getBlockX(), theme.getSpawn().getBlockZ());
+        if (biome == Biome.SWAMP) {
+            buildPlatform(3);
         }
+    }
 
+    private void buildPlatform(int radius) {
+        Location center = theme.getSpawn().clone();
+        int cx = center.getBlockX();
+        int cz = center.getBlockZ();
+        int y = center.getBlockY() - 1;
+        World world = center.getWorld();
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dz = -radius; dz <= radius; dz++) {
+                world.getBlockAt(cx + dx, y, cz + dz).setType(Material.GRASS_BLOCK);
+                world.getBlockAt(cx + dx, y - 1, cz + dz).setType(Material.DIRT);
+                world.getBlockAt(cx + dx, y - 2, cz + dz).setType(Material.DIRT);
+            }
+        }
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dz = -radius; dz <= radius; dz++) {
+                for (int dy = y + 1; dy <= y + 5; dy++) {
+                    world.getBlockAt(cx + dx, dy, cz + dz).setType(Material.AIR);
+                }
+            }
+        }
     }
 
     public void delete() {
@@ -219,6 +247,11 @@ public class Realm {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (cuboid.containsLocation(player.getLocation())) {
                 new ConfigFiles().sendToSpawn(player);
+            }
+            Location bed = player.getBedSpawnLocation();
+            if (bed != null && bed.getWorld().equals(theme.getSpawn().getWorld()) && cuboid.containsLocation(bed)) {
+                player.setBedSpawnLocation(null);
+                player.sendMessage("§cYour bed spawn was in an unclaimed realm and has been reset.");
             }
         }
         new RealmConfig().delete(this);

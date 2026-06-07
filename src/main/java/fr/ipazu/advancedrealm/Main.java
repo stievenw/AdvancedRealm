@@ -51,6 +51,7 @@ public class Main extends JavaPlugin {
         new EventManager(this);
         getCommand("realm").setExecutor(new RealmCommand());
         getCommand("visit").setExecutor(new Visit());
+        getCommand("spawn").setExecutor(new SpawnCommand());
         getCommand("configrealm").setExecutor(new ConfigRealm());
         pushMetrics();
     }

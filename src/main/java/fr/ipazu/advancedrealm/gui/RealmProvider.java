@@ -73,12 +73,18 @@ public class RealmProvider implements InventoryProvider {
     }
 
     private void initWithRealm(InventoryContents contents) {
-        // Owner head at slot 0
+        // Owner head at slot 0 - click to visit
         ItemStack ownerHead = ItemsUtils.getHead(
             realm.getOwner().getName(),
             "§b§l" + realm.getOwner().getName() + "'s Realm",
-            Arrays.asList("§7Level: §e" + realm.getLevel().getNumber(), "§7Members: §e" + realm.getRealmMembers().size()));
-        contents.set(0, 0, ClickableItem.of(ownerHead, e -> e.setCancelled(true)));
+            Arrays.asList("§7Click to visit your Realm", "§7Level: §e" + realm.getLevel().getNumber(), "§7Members: §e" + realm.getRealmMembers().size()));
+        contents.set(0, 0, ClickableItem.of(ownerHead, e -> {
+            e.setCancelled(true);
+            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
+            realm.teleportToSpawn(player);
+            player.sendMessage("§aTeleporting to the realm...");
+            player.closeInventory();
+        }));
 
         // Member heads with pagination
         List<RealmPlayer> allMembers = realm.getRealmMembers();
@@ -99,7 +105,13 @@ public class RealmProvider implements InventoryProvider {
             ItemStack head = ItemsUtils.getHead(
                 rp.getName(), "§b" + rp.getName(),
                 Arrays.asList("§7Rank: §e" + rp.getRankByRealm(realm).toString()));
-            contents.set(0, slot, ClickableItem.of(head, e -> e.setCancelled(true)));
+            contents.set(0, slot, ClickableItem.of(head, e -> {
+                e.setCancelled(true);
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
+                realm.teleportToSpawn(player);
+                player.sendMessage("§aTeleporting to the realm...");
+                player.closeInventory();
+            }));
         }
 
         // Navigation
@@ -204,20 +216,8 @@ public class RealmProvider implements InventoryProvider {
             }
         }
 
-        // Theme (slot 39)
+        // Members (slot 39)
         contents.set(4, 3, ClickableItem.of(
-            new ItemsUtils(Config.getMaterial(config.getString("gui.realmgui.theme.item")),
-                Config.getStringWithReplacementRealm(config.getString("gui.realmgui.theme.name"), realm),
-                (byte) config.getInt("gui.realmgui.theme.data"),
-                Config.getListWithReplacementRealm(config.getStringList("gui.realmgui.theme.lore"), realm)).toItemStack(), e -> {
-            e.setCancelled(true);
-            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
-            player.closeInventory();
-            new WholeGUI().openThemeGui(player, realm);
-        }));
-
-        // Members (slot 40)
-        contents.set(4, 4, ClickableItem.of(
             new ItemsUtils(Config.getMaterial(config.getString("gui.realmgui.members.item")),
                 Config.getStringWithReplacementRealm(config.getString("gui.realmgui.members.name"), realm),
                 (byte) config.getInt("gui.realmgui.members.data"),
@@ -228,8 +228,8 @@ public class RealmProvider implements InventoryProvider {
             new WholeGUI().openMembersGui(player, realm);
         }));
 
-        // Banned (slot 41)
-        contents.set(4, 5, ClickableItem.of(
+        // Banned (slot 40)
+        contents.set(4, 4, ClickableItem.of(
             new ItemsUtils(Config.getMaterial(config.getString("gui.realmgui.banned.item")),
                 Config.getStringWithReplacementRealm(config.getString("gui.realmgui.banned.name"), realm),
                 (byte) config.getInt("gui.realmgui.banned.data"),
@@ -240,8 +240,8 @@ public class RealmProvider implements InventoryProvider {
             new WholeGUI().openBanned(player, realm);
         }));
 
-        // Delete (slot 42)
-        contents.set(4, 6, ClickableItem.of(
+        // Delete (slot 41)
+        contents.set(4, 5, ClickableItem.of(
             new ItemsUtils(Material.RED_TERRACOTTA, "§cDelete Realm", (byte) 0,
                 Arrays.asList("§7Click to delete your Realm.", "§7This cannot be undone!")).toItemStack(), e -> {
             e.setCancelled(true);

@@ -2,7 +2,6 @@ package fr.ipazu.advancedrealm.realm;
 
 
 import fr.ipazu.advancedrealm.Main;
-import fr.ipazu.advancedrealm.realm.themes.ThemeType;
 import fr.ipazu.advancedrealm.utils.Config;
 import fr.ipazu.advancedrealm.utils.ConfigFiles;
 import org.bukkit.Bukkit;
@@ -79,13 +78,12 @@ public class RealmConfig {
         for (RealmPlayer bplayer : realm.getBanned()) {
             config.set("realms." + realm.getOwner().getUniqueId() + ".banned.", bplayer.getUniqueId());
         }
-        config.set("realms." + realm.getOwner().getUniqueId() + ".theme.id", realm.getTheme().getThemeType().getName());
-        config.set("realms." + realm.getOwner().getUniqueId() + ".theme.spawn.x", realm.getTheme().getSpawn().getBlockX());
-        config.set("realms." + realm.getOwner().getUniqueId() + ".theme.spawn.y", realm.getTheme().getSpawn().getBlockY());
-        config.set("realms." + realm.getOwner().getUniqueId() + ".theme.spawn.z", realm.getTheme().getSpawn().getBlockZ());
-        config.set("realms." + realm.getOwner().getUniqueId() + ".theme.spawn.yaw", realm.getTheme().getSpawn().getYaw());
-        config.set("realms." + realm.getOwner().getUniqueId() + ".theme.spawn.pitch", realm.getTheme().getSpawn().getPitch());
-        config.set("realms." + realm.getOwner().getUniqueId() + ".theme.spawn.world", realm.getWorld().getName());
+        config.set("realms." + realm.getOwner().getUniqueId() + ".spawn.x", realm.getTheme().getSpawn().getBlockX());
+        config.set("realms." + realm.getOwner().getUniqueId() + ".spawn.y", realm.getTheme().getSpawn().getBlockY());
+        config.set("realms." + realm.getOwner().getUniqueId() + ".spawn.z", realm.getTheme().getSpawn().getBlockZ());
+        config.set("realms." + realm.getOwner().getUniqueId() + ".spawn.yaw", realm.getTheme().getSpawn().getYaw());
+        config.set("realms." + realm.getOwner().getUniqueId() + ".spawn.pitch", realm.getTheme().getSpawn().getPitch());
+        config.set("realms." + realm.getOwner().getUniqueId() + ".spawn.world", realm.getWorld().getName());
         try {
             config.save(file);
         } catch (Exception e) {
@@ -234,26 +232,22 @@ public class RealmConfig {
                         new RealmPlayer(s, config.getString("realms." + name + ".players." + s + ".name"));
                 }
             }
-            String worldName = config.getString("realms." + name + ".theme.spawn.world");
+            String worldName = config.getString("realms." + name + ".spawn.world");
             World world = worldName != null ? Bukkit.getWorld(worldName) : ConfigFiles.getWorld();
             if (world == null) world = ConfigFiles.getWorld();
             Location spawn = new Location(world,
-                config.getInt("realms." + name + ".theme.spawn.x"),
-                config.getInt("realms." + name + ".theme.spawn.y"),
-                config.getInt("realms." + name + ".theme.spawn.z"),
-                (float) config.getInt("realms." + name + ".theme.spawn.yaw"),
-                (float) config.getInt("realms." + name + ".theme.spawn.pitch"));
-            ThemeType themeType = ThemeType.themeTypes.get(config.getString("realms." + name + ".theme.id"));
-            if (themeType == null) {
-                themeType = ThemeType.allthemeTypes.isEmpty() ? null : ThemeType.allthemeTypes.get(0);
-            }
+                config.getInt("realms." + name + ".spawn.x"),
+                config.getInt("realms." + name + ".spawn.y"),
+                config.getInt("realms." + name + ".spawn.z"),
+                (float) config.getInt("realms." + name + ".spawn.yaw"),
+                (float) config.getInt("realms." + name + ".spawn.pitch"));
             String ownerUuid = config.getString("realms." + name + ".owner.uuid");
             if (ownerUuid != null && RealmPlayer.getPlayer(ownerUuid) == null) {
                 new RealmPlayer(ownerUuid, config.getString("realms." + name + ".owner.name"));
             }
             RealmPlayer owner = ownerUuid != null ? RealmPlayer.getPlayer(ownerUuid) : null;
             if (owner == null) return;
-            Realm realm = new Realm(owner, themeType, spawn, Math.max(1, config.getInt("realms." + name + ".level")), Math.max(0, config.getInt("realms." + name + ".vote")));
+            Realm realm = new Realm(owner, spawn, Math.max(1, config.getInt("realms." + name + ".level")), Math.max(0, config.getInt("realms." + name + ".vote")));
             if (config.getConfigurationSection("realms." + name + ".players") != null) {
                 for (String s : config.getConfigurationSection("realms." + name + ".players").getKeys(false)) {
                     RealmPlayer rp = RealmPlayer.getPlayer(s);

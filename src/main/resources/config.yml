@@ -1,14 +1,3 @@
-themes:
-  basic:
-    path: basictheme.schematic
-    blocks_infrontof_spawn: 8
-    permission: realm.theme.other
-    item:
-      name: '&eBasic Theme'
-      material: GRASS
-      durability: 1
-      lore:
-        - '§7The theme of the basic island'
 config:
   #The space beetween each realm
   spacing: 500

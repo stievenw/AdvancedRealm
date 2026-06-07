@@ -3,7 +3,6 @@ package fr.ipazu.advancedrealm.utils;
 import fr.ipazu.advancedrealm.Main;
 import fr.ipazu.advancedrealm.realm.RealmConfig;
 import fr.ipazu.advancedrealm.realm.RealmLevel;
-import fr.ipazu.advancedrealm.realm.themes.ThemeConfig;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
@@ -32,9 +31,6 @@ public class ConfigFiles {
     private void checkFolder() {
         if (!Main.getInstance().getDataFolder().exists())
             Main.getInstance().getDataFolder().mkdir();
-        File themedir = new File(Main.getInstance().getDataFolder().getPath() + "/theme");
-        if (!themedir.exists())
-            themedir.mkdir();
         pasteFiles();
     }
 
@@ -43,8 +39,6 @@ public class ConfigFiles {
         initConfigs();
         loadConfig();
         loadUpgrades();
-        Main.getInstance().getLogger().info("Starting loading themes ...");
-        new ThemeConfig().loadAllThemes();
         Main.getInstance().getLogger().info("Starting loading realms ...");
         new RealmConfig().loadAllRealm();
         Verification.check();
@@ -226,11 +220,6 @@ public class ConfigFiles {
     }
 
     private void pasteFiles() {
-        if (!new File(Main.getInstance().getDataFolder() + "/theme/basictheme.schematic").exists()) {
-            Main.getInstance().getLogger().info("Creating basic theme schematic");
-            copy(getClass().getResourceAsStream("/schematics/theme/basictheme.schematic"), Main.getInstance().getDataFolder().getAbsolutePath() + "/theme/basictheme.schematic");
-        }
-
     }
     public static boolean copy(InputStream source , String destination) {
 

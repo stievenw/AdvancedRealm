@@ -56,14 +56,6 @@ gui:
       lore:
         - ""
         - "&7View and manage the members of this realm."
-    theme:
-      item: PAINTING
-      data: 0
-      name: "&bSpawn Themes"
-      slot: 39
-      lore:
-        - ""
-        - "&7Customize your Realms spawn point with different themes."
     upgrade:
       item: DIRT
       data: 0

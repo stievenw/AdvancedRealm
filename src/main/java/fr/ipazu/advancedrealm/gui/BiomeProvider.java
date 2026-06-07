@@ -5,7 +5,6 @@ import org.bukkit.Bukkit;
 import fr.ipazu.advancedrealm.realm.Realm;
 import fr.ipazu.advancedrealm.realm.RealmConfig;
 import fr.ipazu.advancedrealm.realm.RealmPlayer;
-import fr.ipazu.advancedrealm.realm.themes.ThemeType;
 import fr.ipazu.advancedrealm.utils.ConfigFiles;
 import fr.ipazu.advancedrealm.utils.ItemsUtils;
 import fr.ipazu.advancedrealm.utils.TitleUtils;
@@ -103,7 +102,7 @@ public class BiomeProvider implements InventoryProvider {
 
         bossBar.setProgress(0.55);
         bossBar.setTitle("§6Creating realm...");
-        Realm realm = new Realm(realmPlayer, ThemeType.allthemeTypes.get(0), spawn, 1, 0);
+        Realm realm = new Realm(realmPlayer, spawn, 1, 0);
         realm.pasteIsland();
         realm.fillChest();
         new RealmConfig().updateRealm(realmPlayer.getOwned());

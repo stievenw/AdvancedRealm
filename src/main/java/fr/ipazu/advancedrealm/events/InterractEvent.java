@@ -79,7 +79,7 @@ public class InterractEvent implements Listener {
     public void onPortal(PlayerPortalEvent event) {
         if (Realm.getRealmFromLocation(event.getFrom()) != null) {
             Realm realm = Realm.getRealmFromLocation(event.getFrom());
-            if (realm.getTheme().getCuboid().containsLocation(event.getFrom())) {
+            if (realm.getCuboid().containsLocation(event.getFrom())) {
                 event.setCancelled(true);
                 event.setTo(ConfigFiles.getSpawn());
             }
@@ -127,7 +127,7 @@ public class InterractEvent implements Listener {
             Block b = iter.next();
             if (Realm.getRealmFromLocation(b.getLocation()) != null) {
                 Realm realm = Realm.getRealmFromLocation(b.getLocation());
-                if (realm.getTheme().getCuboid().containsLocation(b.getLocation())) {
+                if (realm.getCuboid().containsLocation(b.getLocation())) {
                     iter.remove();
                 }
             }
@@ -184,7 +184,7 @@ public class InterractEvent implements Listener {
         } else {
             if (Realm.getRealmFromLocation(event.getEntity().getLocation()) != null && event.getEntity() instanceof Player) {
                 Realm realm = Realm.getRealmFromLocation(event.getEntity().getLocation());
-                if (realm.getTheme().getCuboid().containsLocation(event.getEntity().getLocation())) {
+                if (realm.getCuboid().containsLocation(event.getEntity().getLocation())) {
                     event.setCancelled(true);
                 }
             }
@@ -219,7 +219,7 @@ public class InterractEvent implements Listener {
                 if (!realm.getRealmMembers().contains(RealmPlayer.getPlayer(player.getUniqueId().toString()))) {
                     event.setCancelled(true);
                 }
-                if (realm.getTheme().getCuboid().containsLocation(player.getLocation())) {
+                if (realm.getCuboid().containsLocation(player.getLocation())) {
                     event.setCancelled(true);
                 }
             }
@@ -231,7 +231,7 @@ public class InterractEvent implements Listener {
     public void mobSpawn(CreatureSpawnEvent event) {
         if (Realm.getRealmFromLocation(event.getEntity().getLocation()) != null) {
             Realm realm = Realm.getRealmFromLocation(event.getEntity().getLocation());
-            if (realm.getTheme().getCuboid().containsLocation(event.getEntity().getLocation())) {
+            if (realm.getCuboid().containsLocation(event.getEntity().getLocation())) {
                 event.setCancelled(true);
             }
 

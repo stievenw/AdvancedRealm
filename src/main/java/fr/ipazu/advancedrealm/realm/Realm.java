@@ -2,7 +2,6 @@ package fr.ipazu.advancedrealm.realm;
 
 import fr.ipazu.advancedrealm.Main;
 import fr.ipazu.advancedrealm.realm.themes.Theme;
-import fr.ipazu.advancedrealm.realm.themes.ThemeType;
 import fr.ipazu.advancedrealm.utils.ConfigFiles;
 import fr.ipazu.advancedrealm.utils.CuboidUtils;
 import fr.ipazu.advancedrealm.utils.WorldBorder;
@@ -30,11 +29,11 @@ public class Realm {
     private ArrayList<RealmPlayer> banned = new ArrayList<>();
     private RealmPlayer owner;
 
-    public Realm(RealmPlayer rp, ThemeType theme, Location location, int level, int vote) {
+    public Realm(RealmPlayer rp, Location location, int level, int vote) {
         owner = rp;
         setLevel(level);
         privacy = false;
-        this.theme = new Theme(theme, location);
+        this.theme = new Theme(location);
         this.vote = vote;
         setCuboid();
         allrealm.add(this);
@@ -56,10 +55,6 @@ public class Realm {
         setCuboid();
         new RealmConfig().setLevel(this);
         sendBorderToAll();
-    }
-
-    public void spawnTheme() {
-        theme.spawnTheme();
     }
 
     public void teleportToSpawn(Player player) {

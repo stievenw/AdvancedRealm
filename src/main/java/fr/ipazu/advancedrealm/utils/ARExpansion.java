@@ -158,13 +158,6 @@ public class ARExpansion extends PlaceholderExpansion {
                     return "0";
                 return ""+ realm.getPrivacyString();
             }
-            // %advancedrealm_realm_theme%
-
-            if(identifier.equals("realm_theme")){
-                if(realm == null)
-                    return "0";
-                return ""+ realm.getTheme().getThemeType().getName();
-            }
             // %advancedrealm_realm_vote%
 
             if(identifier.equals("realm_vote")){

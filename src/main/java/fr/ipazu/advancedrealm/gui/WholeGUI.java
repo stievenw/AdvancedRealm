@@ -78,15 +78,6 @@ public class WholeGUI {
                 .build();
         inventory.open(player);
     }
-    public void openThemeGui(Player player, Realm realm) {
-        SmartInventory inventory = SmartInventory.builder()
-                .provider(new ThemeProvider(player, realm))
-                .size(3, 9)
-                .title("Choose a Theme")
-                .build();
-        inventory.open(player);
-    }
-
     public void openAllInviteGUI(Player player, Player vised) {
         getAllInviteGUI(player, vised).open(player);
     }

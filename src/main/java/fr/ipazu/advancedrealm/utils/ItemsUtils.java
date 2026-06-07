@@ -24,6 +24,7 @@ public class ItemsUtils {
         ItemMeta itemMeta = this.item.getItemMeta();
         itemMeta.setDisplayName(name);
         itemMeta.setLore(sl);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         this.item.setItemMeta(itemMeta);
         this.material = material;
         this.name = name;

@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.profile.PlayerProfile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -134,9 +135,11 @@ public class ItemsUtils {
     public static ItemStack getHead(String playername, String name, List<String> lore) {
         ItemStack head = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) head.getItemMeta();
-        meta.setOwnerProfile(Bukkit.createPlayerProfile(playername));
+        PlayerProfile profile = Bukkit.getOfflinePlayer(playername).getPlayerProfile();
+        meta.setOwnerProfile(profile);
         meta.setDisplayName(name);
         meta.setLore(lore);
+        meta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
         head.setItemMeta(meta);
         return head;
     }

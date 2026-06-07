@@ -49,10 +49,7 @@ public class Main extends JavaPlugin {
         logOptionalPlugins();
         new ConfigFiles().init();
         new EventManager(this);
-        getCommand("unclaim").setExecutor(new Unclaim());
-        getCommand("claim").setExecutor(new Claim());
         getCommand("realm").setExecutor(new RealmCommand());
-        getCommand("home").setExecutor(new Home());
         getCommand("visit").setExecutor(new Visit());
         getCommand("configrealm").setExecutor(new ConfigRealm());
         pushMetrics();

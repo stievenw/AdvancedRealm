@@ -24,27 +24,27 @@ gui:
       item: DARK_OAK_DOOR
       data: 0
       name: "&bTeleport to Realm"
-      slot: 11
+      slot: 36
       lore:
         - ""
         - "&7Teleport to %realm_name%'s Realm."
       clickmessage: "&aTeleporting to the realm..."
     privacy:
-      item: WOODEN_SWORD
+      item: LIME_DYE
       data: 0
-      name: "&bToogle Privacy: &3%realm_privacy%"
-      slot: 13
+      name: "&bToggle Privacy: &3%realm_privacy%"
+      slot: 37
       lore:
-        - "&7Toogle Realm's privacy"
+        - "&7Toggle Realm's privacy"
         - ""
         - "&aPublic &8- &7Anyone can visit your Realm."
         - "&cPrivate &8- &7No one can visit your Realm."
-      clickmessage: "&aRealm visibility succefully changed to &b%realm_privacy%"
+      clickmessage: "&aRealm visibility successfully changed to &b%realm_privacy%"
     banned:
       item: BARRIER
       data: 0
       name: "&bBanned Players"
-      slot: 33
+      slot: 41
       lore:
         - ""
         - "&7View and manage players that have been banned from this Realm."
@@ -52,7 +52,7 @@ gui:
       item: PLAYER_HEAD
       data: 3
       name: "&bMembers"
-      slot: 31
+      slot: 40
       lore:
         - ""
         - "&7View and manage the members of this realm."
@@ -60,7 +60,7 @@ gui:
       item: PAINTING
       data: 0
       name: "&bSpawn Themes"
-      slot: 29
+      slot: 39
       lore:
         - ""
         - "&7Customize your Realms spawn point with different themes."
@@ -68,7 +68,7 @@ gui:
       item: DIRT
       data: 0
       name: "&bUpgrade Build Size"
-      slot: 15
+      slot: 38
       lore:
         - "&7Click to upgrade Realm's build size."
         - ""
@@ -99,7 +99,7 @@ gui:
     item: RED_BED
     data: 0
     name: "⬅ &bGo back"
-    slot: 45
+    slot: 44
     lore:
         - ""
         - "&7Click to go back to the"

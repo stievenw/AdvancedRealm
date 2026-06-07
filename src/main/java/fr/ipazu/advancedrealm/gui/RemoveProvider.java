@@ -25,16 +25,15 @@ public class RemoveProvider implements InventoryProvider {
     }
 
     private void setUpItems() {
-        yes = ClickableItem.of(new ItemsUtils(Material.RED_TERRACOTTA, "§cUnclaim Realm",(byte) 0, Arrays.asList("§7Unclaiming a realm will ", "§7remove your Realm and any ","§7progress on that Realm.")).toItemStack(), e -> {
+        yes = ClickableItem.of(new ItemsUtils(Material.RED_TERRACOTTA, "§cDelete Realm",(byte) 0, Arrays.asList("§7Deleting a realm will ", "§7remove your Realm and any ","§7progress on that Realm.")).toItemStack(), e -> {
             e.setCancelled(true);
             player.playSound(player.getLocation(), org.bukkit.Sound.BLOCK_ANVIL_LAND, 1, 1);
             e.getWhoClicked().closeInventory();
-            //new RealmUnclaimEvent(realm, RealmPlayer.getPlayer(player.getUniqueId().toString()),player);
             realm.delete();
-            TitleUtils.titlePacket(player,20,30,20,"§bRealm unclaimed","§aClaim a new one with §6/claim");
+            TitleUtils.titlePacket(player,20,30,20,"§bRealm deleted","§aCreate a new one in the Realm GUI");
         });
 
-        no = ClickableItem.of(new ItemsUtils(Material.GREEN_TERRACOTTA, "§aKeep Realm",(byte) 0, Collections.singletonList("§7Cancel unclaim request.")).toItemStack(), e -> {
+        no = ClickableItem.of(new ItemsUtils(Material.GREEN_TERRACOTTA, "§aKeep Realm",(byte) 0, Collections.singletonList("§7Cancel delete request.")).toItemStack(), e -> {
             e.setCancelled(true);
             player.playSound(player.getLocation(), org.bukkit.Sound.UI_BUTTON_CLICK, 1, 1);
             e.getWhoClicked().closeInventory();

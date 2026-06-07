@@ -22,8 +22,16 @@ public class WholeGUI {
     }
 
     public void openRealmGui(Player player, Realm realm,boolean from) {
+        openRealmGui(player, RealmPlayer.getPlayer(realm.getOwner().getUniqueId()), from, 0);
+    }
+
+    public void openRealmGui(Player player, RealmPlayer realmPlayer, boolean from) {
+        openRealmGui(player, realmPlayer, from, 0);
+    }
+
+    public void openRealmGui(Player player, RealmPlayer realmPlayer, boolean from, int memberPage) {
         SmartInventory inventory = SmartInventory.builder()
-                .provider(new RealmProvider(player, realm,from))
+                .provider(new RealmProvider(player, realmPlayer, from, memberPage))
                 .size(5, 9)
                 .title("Realm")
                 .build();

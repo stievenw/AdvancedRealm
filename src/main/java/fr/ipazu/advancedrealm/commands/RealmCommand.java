@@ -18,6 +18,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+
 import java.util.ArrayList;
 
 public class RealmCommand implements CommandExecutor {
@@ -274,11 +275,10 @@ public class RealmCommand implements CommandExecutor {
                 }
                 else if (args[0].equalsIgnoreCase("help")) {
                     player.sendMessage("                      §eRealms commands:" +
-                            "\n§2/claim: §aClaim a new realm" +
-                            "\n§2/unclaim: §aUnclaim your owned realm(delete)" +
-                            "\n§2/visit §o<player>: §r§aVisit someone's realm" +
-                            "\n§2/home: §aGo to your realms" +
                             "\n§2/realm: §aOpen realm gui" +
+                            "\n§2/realm claim: §aClaim a new realm" +
+                            "\n§2/realm delete: §aDelete your owned realm" +
+                            "\n§2/visit §o<player>: §r§aVisit someone's realm" +
                             "\n§2/realm invite §o<player>: §r§aInvite someone to a realm" +
                             "\n§2/realm leave §o<player>: §r§aLeave a realm" +
                             "\n§2/realm kick §o<player>: §r§aKick someone from a realm" +
@@ -287,18 +287,33 @@ public class RealmCommand implements CommandExecutor {
                             "\n§2/realm vote §o<player>: §r§aVote for someone's realm"
                     );
                 }
+                else if (args[0].equalsIgnoreCase("claim")) {
+                    if (!player.hasPermission("realm.claim")) {
+                        player.sendMessage("§cYou don't have the permission to do this.");
+                        return false;
+                    }
+                    if (rp.getOwned() == null) {
+                        new WholeGUI().openBiomeGUI(player, rp);
+                    } else {
+                        player.sendMessage("§cYou already have claimed a realm");
+                    }
+                }
+                else if (args[0].equalsIgnoreCase("delete")) {
+                    if (!player.hasPermission("realm.unclaim")) {
+                        player.sendMessage("§cYou don't have the permission to do this.");
+                        return false;
+                    }
+                    if (rp.getOwned() != null) {
+                        new WholeGUI().openUnclaimGui(player, rp.getOwned());
+                    } else {
+                        player.sendMessage("§cYou don't have a realm to delete");
+                    }
+                }
                 else
                     player.sendMessage("§cWrong command, type </realm help> to have a list of the commands");
             }
             else if (args.length == 0) {
-                if (rp.getOwned() == null && rp.getAllRealm().size() == 0) {
-                    player.sendMessage("§cYou haven't claimed a realm: /claim");
-                    return false;
-                }
-                if (rp.getOwned() != null && rp.getAllRealm().size() <= 1) {
-                    new WholeGUI().openRealmGui(player, rp.getAllRealm().get(0), false);
-                } else
-                    new WholeGUI().openAllRealmGUI(player);
+                new WholeGUI().openRealmGui(player, rp, false);
             }
             else
                 player.sendMessage("§cWrong command, type </realm help> to have a list of the commands");
@@ -309,7 +324,6 @@ public class RealmCommand implements CommandExecutor {
 
     public long getNextMilis(RealmPlayer rp) {
         long lastmilis = rp.getLastvote();
-        //for seven hours
         lastmilis += ConfigFiles.getCooldownValue();
         return lastmilis;
     }
@@ -340,4 +354,3 @@ public class RealmCommand implements CommandExecutor {
         strs.forEach(s -> Main.getInstance().getLogger().info(s));
     }
 }
-

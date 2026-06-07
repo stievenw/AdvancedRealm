@@ -21,7 +21,7 @@ public class WholeGUI {
         inventory.open(player);
     }
 
-    public void openRealmGui(Player player, Realm realm,boolean from) {
+    public void openRealmGui(Player player, Realm realm, boolean from) {
         openRealmGui(player, RealmPlayer.getPlayer(realm.getOwner().getUniqueId()), from, 0);
     }
 
@@ -113,7 +113,7 @@ public class WholeGUI {
     public SmartInventory getAllRealmGUI(Player player) {
         return SmartInventory.builder()
                 .provider(new AllRealmProvider(player))
-                .size(3, 9)
+                .size(4, 9)
                 .title("Select a Realm")
                 .build();
 

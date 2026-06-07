@@ -121,7 +121,7 @@ public class BiomeProvider implements InventoryProvider {
                 bossBar.removeAll();
             }
         }.runTaskLater(Main.getInstance(), 60);
-        TitleUtils.titlePacket(player, 20, 30, 20, "§bRealm claimed", "§aGo to your Realm with §6/home");
+        TitleUtils.titlePacket(player, 20, 30, 20, "§bRealm claimed", "§aUse §6/realm §ato teleport");
     }
 
     @Override

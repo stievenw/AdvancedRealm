@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -234,6 +235,9 @@ public class RealmConfig {
             }
             String worldName = config.getString("realms." + name + ".spawn.world");
             World world = worldName != null ? Bukkit.getWorld(worldName) : ConfigFiles.getWorld();
+            if (world == null && worldName != null) {
+                world = Bukkit.createWorld(new WorldCreator(worldName));
+            }
             if (world == null) world = ConfigFiles.getWorld();
             Location spawn = new Location(world,
                 config.getInt("realms." + name + ".spawn.x"),

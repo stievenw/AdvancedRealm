@@ -158,7 +158,7 @@ public class EditMemberProvider implements InventoryProvider {
             e.setCancelled(true);
             player.playSound(player.getLocation(), org.bukkit.Sound.UI_BUTTON_CLICK, 1, 1);
             player.closeInventory();
-            new WholeGUI().openMembersGui(player,realm);
+            new WholeGUI().openRealmGui(player, realmplayer, true);
         });
         basic = ClickableItem.of(new ItemStack(Material.GRAY_STAINED_GLASS_PANE,1,(byte) 15), e -> e.setCancelled(true));
     }

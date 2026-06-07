@@ -47,8 +47,9 @@ public class InterractEvent implements Listener {
                 return;
             }
             if (!realm.getRealmMembers().contains(realmPlayer)) {
-                if (!config.getString("messages.interact.nobreak").isEmpty() && config.getString("messages.interact.nobreak") != null)
-                    player.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(config.getString("messages.interact.nobreak").replace("&","§")));
+                String msg = config.getString("messages.interact.nobreak");
+                if (msg != null && !msg.isEmpty())
+                    player.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg.replace("&","§")));
                 event.setCancelled(true);
             }
 
@@ -67,8 +68,9 @@ public class InterractEvent implements Listener {
                 return;
             }
             if (!realm.getRealmMembers().contains(realmPlayer)) {
-                if (!config.getString("messages.interact.nobuild").isEmpty() && config.getString("messages.interact.nobuild") != null)
-                    player.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(config.getString("messages.interact.nobuild").replace("&","§")));
+                String msg = config.getString("messages.interact.nobuild");
+                if (msg != null && !msg.isEmpty())
+                    player.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg.replace("&","§")));
                 event.setCancelled(true);
             }
 
@@ -98,8 +100,9 @@ public class InterractEvent implements Listener {
             if (Realm.getRealmFromLocation(event.getClickedBlock().getLocation()) != null) {
                 Realm realm = Realm.getRealmFromLocation(event.getClickedBlock().getLocation());
                 if (!realm.getRealmMembers().contains(realmPlayer)) {
-                    if (!config.getString("messages.interact.nointeract").isEmpty() && config.getString("messages.interact.nointeract") != null)
-                        player.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(config.getString("messages.interact.nointeract").replace("&","§")));
+                    String msg = config.getString("messages.interact.nointeract");
+                    if (msg != null && !msg.isEmpty())
+                        player.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg.replace("&","§")));
                     event.setCancelled(true);
                 }
             }
@@ -113,8 +116,9 @@ public class InterractEvent implements Listener {
                 }
                 if (realm.getRealmMembers().contains(realmPlayer) && event.getClickedBlock().getType() == Material.CHEST && realmPlayer.getRankByRealm(realm) == RealmRank.MEMBER) {
                     event.setCancelled(true);
-                    if (!config.getString("messages.interact.nochest").isEmpty()&& config.getString("messages.interact.nochest") != null)
-                        player.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(config.getString("messages.interact.nochest").replace("&","§")));
+                    String msg = config.getString("messages.interact.nochest");
+                    if (msg != null && !msg.isEmpty())
+                        player.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg.replace("&","§")));
                 }
             }
         }
@@ -140,9 +144,6 @@ public class InterractEvent implements Listener {
         if (Realm.getRealmFromLocation(player.getLocation()) != null) {
             Realm realm = Realm.getRealmFromLocation(player.getLocation());
             //new PlayerMoveInRealmEvent(realm,RealmPlayer.getPlayer(player.getUniqueId().toString()),player);
-            if (player.getLocation().getBlockY() <= -1) {
-                realm.teleportToSpawn(player);
-            }
             if (player.getLocation().getBlock().getType() == Material.NETHER_PORTAL) {
                 new ConfigFiles().sendToSpawn(player);
             }
@@ -175,8 +176,9 @@ public class InterractEvent implements Listener {
             if (Realm.getRealmFromLocation(event.getDamager().getLocation()) != null) {
                 Realm realm = Realm.getRealmFromLocation(event.getDamager().getLocation());
                 if (!realm.getRealmMembers().contains(realmPlayer)) {
-                    if (!config.getString("messages.interact.notinrealm").isEmpty()&& config.getString("messages.interact.notinrealm") != null)
-                        damager.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(config.getString("messages.interact.notinrealm").replace("&","§")));
+                    String msg = config.getString("messages.interact.notinrealm");
+                    if (msg != null && !msg.isEmpty())
+                        damager.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg.replace("&","§")));
                     event.setCancelled(true);
                 }
 
@@ -200,8 +202,9 @@ public class InterractEvent implements Listener {
         if (Realm.getRealmFromLocation(event.getRightClicked().getLocation()) != null) {
             Realm realm = Realm.getRealmFromLocation(event.getRightClicked().getLocation());
             if (!realm.getRealmMembers().contains(realmPlayer)) {
-                if (!config.getString("messages.inteact.nointeract").isEmpty()&& config.getString("messages.interact.nointeract") != null)
-                    event.getPlayer().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(config.getString("messages.inteact.nointeract").replace("&","§")));
+                String msg = config.getString("messages.interact.nointeract");
+                if (msg != null && !msg.isEmpty())
+                    event.getPlayer().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg.replace("&","§")));
                 event.setCancelled(true);
             }
         }

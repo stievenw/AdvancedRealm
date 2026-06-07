@@ -279,6 +279,7 @@ public class RealmCommand implements CommandExecutor {
                             "\n§2/realm claim: §aClaim a new realm" +
                             "\n§2/realm delete: §aDelete your owned realm" +
                             "\n§2/visit §o<player>: §r§aVisit someone's realm" +
+                            "\n§2/spawn: §aTeleport to spawn" +
                             "\n§2/realm invite §o<player>: §r§aInvite someone to a realm" +
                             "\n§2/realm leave §o<player>: §r§aLeave a realm" +
                             "\n§2/realm kick §o<player>: §r§aKick someone from a realm" +
@@ -313,7 +314,7 @@ public class RealmCommand implements CommandExecutor {
                     player.sendMessage("§cWrong command, type </realm help> to have a list of the commands");
             }
             else if (args.length == 0) {
-                new WholeGUI().openRealmGui(player, rp, false);
+                new WholeGUI().openAllRealmGUI(player);
             }
             else
                 player.sendMessage("§cWrong command, type </realm help> to have a list of the commands");

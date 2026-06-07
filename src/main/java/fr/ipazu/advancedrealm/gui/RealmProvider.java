@@ -7,7 +7,6 @@ import fr.ipazu.advancedrealm.realm.RealmPlayer;
 import fr.ipazu.advancedrealm.realm.RealmRank;
 import fr.ipazu.advancedrealm.utils.Config;
 import fr.ipazu.advancedrealm.utils.ItemsUtils;
-import fr.ipazu.advancedrealm.utils.TitleUtils;
 import fr.minuskube.inv.ClickableItem;
 import fr.minuskube.inv.content.InventoryContents;
 import fr.minuskube.inv.content.InventoryProvider;
@@ -26,8 +25,8 @@ public class RealmProvider implements InventoryProvider {
     private RealmPlayer realmPlayer;
     private Realm realm;
     private boolean hasRealm;
-    private int memberPage;
     private boolean from;
+    private int memberPage;
     private YamlConfiguration config;
 
     public RealmProvider(Player player, RealmPlayer realmPlayer, boolean from, int memberPage) {
@@ -73,25 +72,18 @@ public class RealmProvider implements InventoryProvider {
     }
 
     private void initWithRealm(InventoryContents contents) {
-        // Owner head at slot 0 - click to visit
-        ItemStack ownerHead = ItemsUtils.getHead(
-            realm.getOwner().getName(),
-            "§b§l" + realm.getOwner().getName() + "'s Realm",
-            Arrays.asList("§7Click to visit your Realm", "§7Level: §e" + realm.getLevel().getNumber(), "§7Members: §e" + realm.getRealmMembers().size()));
-        contents.set(0, 0, ClickableItem.of(ownerHead, e -> {
-            e.setCancelled(true);
-            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
-            realm.teleportToSpawn(player);
-            player.sendMessage("§aTeleporting to the realm...");
-            player.closeInventory();
-        }));
-
-        // Member heads with pagination
-        List<RealmPlayer> allMembers = realm.getRealmMembers();
-        List<RealmPlayer> displayMembers = new ArrayList<>();
-        for (RealmPlayer rp : allMembers) {
-            if (rp != realm.getOwner()) displayMembers.add(rp);
+        // Stained glass separator rows 1-3
+        ItemStack separator = new ItemsUtils(Material.GRAY_STAINED_GLASS_PANE, " ").toItemStack();
+        for (int row = 1; row <= 3; row++) {
+            for (int col = 0; col < 9; col++) {
+                contents.set(row, col, ClickableItem.empty(separator));
+            }
         }
+
+        // Row 0: All member heads, owner first
+        List<RealmPlayer> displayMembers = new ArrayList<>(realm.getRealmMembers());
+        displayMembers.remove(realm.getOwner());
+        displayMembers.add(0, realm.getOwner());
 
         int totalPages = Math.max(1, (int) Math.ceil(displayMembers.size() / 8.0));
         if (memberPage >= totalPages) memberPage = totalPages - 1;
@@ -101,20 +93,20 @@ public class RealmProvider implements InventoryProvider {
         int end = Math.min(start + 8, displayMembers.size());
         for (int i = start; i < end; i++) {
             RealmPlayer rp = displayMembers.get(i);
-            int slot = 1 + (i - start);
+            int slot = i - start;
             ItemStack head = ItemsUtils.getHead(
                 rp.getName(), "§b" + rp.getName(),
-                Arrays.asList("§7Rank: §e" + rp.getRankByRealm(realm).toString()));
+                Arrays.asList("§7Rank: §e" + rp.getRankByRealm(realm).toString(),
+                    "§7Click to manage this player"));
             contents.set(0, slot, ClickableItem.of(head, e -> {
                 e.setCancelled(true);
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
-                realm.teleportToSpawn(player);
-                player.sendMessage("§aTeleporting to the realm...");
                 player.closeInventory();
+                new WholeGUI().openRankGui(rp, player, realm);
             }));
         }
 
-        // Navigation
+        // Member pagination nav in separator rows
         if (memberPage > 0) {
             contents.set(1, 0, ClickableItem.of(
                 new ItemsUtils(Material.ARROW, "§bPrevious", Arrays.asList("§7Page " + memberPage)).toItemStack(), e -> {
@@ -132,7 +124,7 @@ public class RealmProvider implements InventoryProvider {
             }));
         }
 
-        // --- Bottom row action buttons (row 4, sequential) ---
+        // Row 4: Action buttons (Home, Privacy, Upgrade, Banned, Delete, Back) — no Members button
         // Home (slot 36)
         contents.set(4, 0, ClickableItem.of(
             new ItemsUtils(Config.getMaterial(config.getString("gui.realmgui.home.item")),
@@ -216,20 +208,8 @@ public class RealmProvider implements InventoryProvider {
             }
         }
 
-        // Members (slot 39)
+        // Banned (slot 39)
         contents.set(4, 3, ClickableItem.of(
-            new ItemsUtils(Config.getMaterial(config.getString("gui.realmgui.members.item")),
-                Config.getStringWithReplacementRealm(config.getString("gui.realmgui.members.name"), realm),
-                (byte) config.getInt("gui.realmgui.members.data"),
-                Config.getListWithReplacementRealm(config.getStringList("gui.realmgui.members.lore"), realm)).toItemStack(), e -> {
-            e.setCancelled(true);
-            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
-            player.closeInventory();
-            new WholeGUI().openMembersGui(player, realm);
-        }));
-
-        // Banned (slot 40)
-        contents.set(4, 4, ClickableItem.of(
             new ItemsUtils(Config.getMaterial(config.getString("gui.realmgui.banned.item")),
                 Config.getStringWithReplacementRealm(config.getString("gui.realmgui.banned.name"), realm),
                 (byte) config.getInt("gui.realmgui.banned.data"),
@@ -240,8 +220,8 @@ public class RealmProvider implements InventoryProvider {
             new WholeGUI().openBanned(player, realm);
         }));
 
-        // Delete (slot 41)
-        contents.set(4, 5, ClickableItem.of(
+        // Delete (slot 40)
+        contents.set(4, 4, ClickableItem.of(
             new ItemsUtils(Material.RED_TERRACOTTA, "§cDelete Realm", (byte) 0,
                 Arrays.asList("§7Click to delete your Realm.", "§7This cannot be undone!")).toItemStack(), e -> {
             e.setCancelled(true);

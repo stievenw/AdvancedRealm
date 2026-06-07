@@ -94,17 +94,9 @@ public class WholeGUI {
     public void openAllRealmGUI(Player player) {
         getAllRealmGUI(player).open(player);
     }
-    public void openPerkGUI(Player player, RealmPlayer realmPlayer) { getPerkGui(player,realmPlayer).open(player);}
     public void openTopGUI(Player player) { getTopGui(player).open(player);}
 
 
-    public SmartInventory getPerkGui(Player player, RealmPlayer realmPlayer) {
-        return SmartInventory.builder()
-                .provider(new PerkProvider(player, realmPlayer))
-                .size(1, 9)
-                .title("Choose your specialization")
-                .build();
-    }
     public SmartInventory getTopGui(Player player) {
         return SmartInventory.builder()
                 .provider(new TopProvider(player))

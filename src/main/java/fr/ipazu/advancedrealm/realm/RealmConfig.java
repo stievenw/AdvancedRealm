@@ -1,7 +1,6 @@
 package fr.ipazu.advancedrealm.realm;
 
 
-import com.google.common.collect.Iterables;
 import fr.ipazu.advancedrealm.Main;
 import fr.ipazu.advancedrealm.realm.themes.ThemeType;
 import fr.ipazu.advancedrealm.utils.Config;
@@ -337,22 +336,6 @@ public class RealmConfig {
         }
     }
 
-    private Location getLastLocation() {
-        if (config.getConfigurationSection("realms") == null) {
-            return new Location(ConfigFiles.getWorld(), ConfigFiles.getRealmspacing(), 66, 0);
-        }
-        String laststring = Iterables.getLast(config.getConfigurationSection("realms").getKeys(false));
-        ConfigurationSection section = config.getConfigurationSection("realms." + laststring + ".theme.spawn");
-        if (section != null) {
-            return new Location(ConfigFiles.getWorld(), section.getDouble("x"), 66, section.getDouble("z"));
-        }
-        return new Location(ConfigFiles.getWorld(), ConfigFiles.getRealmspacing(), 66, 0);
-    }
-
-    public Location getNewLocation() {
-        return getNewLocation(ConfigFiles.getWorld());
-    }
-
     public int getNextCellIndex(String worldName) {
         String path = "cell-counters." + worldName;
         int index = config.getInt(path, -1);
@@ -377,17 +360,6 @@ public class RealmConfig {
         Random rand = new Random();
         int margin = 50;
 
-        if (ConfigFiles.getRealmType() == RealmType.ISLAND) {
-            if (Realm.allrealm.isEmpty()) {
-                return new Location(world, spacing, 66, 0);
-            }
-            Location last = getLastLocation();
-            int i = Realm.allrealm.size() % 20;
-            if (i == 0)
-                return last.clone().add(-last.getX(), 0, spacing);
-            else
-                return last.clone().add(spacing, 0, 0);
-        }
         int cellIndex = getNextCellIndex(world.getName());
         int col = cellIndex % 20;
         int row = cellIndex / 20;

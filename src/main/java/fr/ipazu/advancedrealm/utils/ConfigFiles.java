@@ -3,13 +3,11 @@ package fr.ipazu.advancedrealm.utils;
 import fr.ipazu.advancedrealm.Main;
 import fr.ipazu.advancedrealm.realm.RealmConfig;
 import fr.ipazu.advancedrealm.realm.RealmLevel;
-import fr.ipazu.advancedrealm.realm.RealmType;
 import fr.ipazu.advancedrealm.realm.themes.ThemeConfig;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.generator.BiomeProvider;
-import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -29,8 +27,6 @@ public class ConfigFiles {
     private static Inventory realmchest;
     private static World realmworld;
     private static long cooldown;
-    private static RealmType realmType;
-    private static Biome realmBiome;
     private static List<Biome> availableBiomes = new ArrayList<>();
 
     private void checkFolder() {
@@ -58,8 +54,6 @@ public class ConfigFiles {
     public void loadConfig() {
         YamlConfiguration config = Config.CONFIG.getConfig();
         loadWorlds(config);
-        realmType = RealmType.valueOf(config.getString("config.realm-type", "ISLAND").toUpperCase());
-        realmBiome = Biome.valueOf(config.getString("config.world-biome", "PLAINS").toUpperCase());
         availableBiomes.clear();
         for (String b : config.getStringList("config.biomes")) {
             try {
@@ -142,16 +136,8 @@ public class ConfigFiles {
         return realmworld;
     }
 
-    public static RealmType getRealmType() {
-        return realmType;
-    }
-
-    public static Biome getRealmBiome() {
-        return realmBiome;
-    }
-
     public static List<Biome> getAvailableBiomes() {
-        return availableBiomes.isEmpty() ? Collections.singletonList(realmBiome) : availableBiomes;
+        return availableBiomes.isEmpty() ? Collections.singletonList(Biome.PLAINS) : availableBiomes;
     }
 
     public static World getOrCreateWorldForBiome(Biome biome) {
@@ -227,34 +213,11 @@ public class ConfigFiles {
     }
 
     private void loadWorlds(YamlConfiguration config) {
-        String realmWorldName = config.getString("config.world");
-        String spawnWorldName = config.getString("config.spawn.world");
-
-        for (String worldName : new String[]{realmWorldName, spawnWorldName}) {
+        for (String worldName : new String[]{config.getString("config.world"), config.getString("config.spawn.world")}) {
             if (Bukkit.getWorld(worldName) == null) {
-                WorldCreator wc = WorldCreator.name(worldName)
-                    .environment(World.Environment.NORMAL);
-                if (worldName.equals(realmWorldName)) {
-                    if (realmType == RealmType.ISLAND) {
-                        wc.generator(new ChunkGenerator() {
-                            @Override
-                            public void generateSurface(org.bukkit.generator.WorldInfo worldInfo, java.util.Random random, int chunkX, int chunkZ, ChunkGenerator.ChunkData chunkData) {
-                            }
-                        });
-                    } else if (realmType == RealmType.WORLD) {
-                        wc.biomeProvider(new BiomeProvider() {
-                            @Override
-                            public Biome getBiome(WorldInfo worldInfo, int x, int y, int z) {
-                                return realmBiome;
-                            }
-                            @Override
-                            public List<Biome> getBiomes(WorldInfo worldInfo) {
-                                return Collections.singletonList(realmBiome);
-                            }
-                        });
-                    }
-                }
-                World world = wc.createWorld();
+                World world = WorldCreator.name(worldName)
+                    .environment(World.Environment.NORMAL)
+                    .createWorld();
                 if (world != null) {
                     Main.getInstance().getLogger().info("World '" + worldName + "' created/loaded successfully.");
                 }
@@ -263,10 +226,6 @@ public class ConfigFiles {
     }
 
     private void pasteFiles() {
-        if (!new File(Main.getInstance().getDataFolder()+"/island.schematic").exists()) {
-            Main.getInstance().getLogger().info("Creating island schematic");
-            copy(getClass().getResourceAsStream("/schematics/island.schematic"),Main.getInstance().getDataFolder().getAbsolutePath() + "/island.schematic");
-        }
         if (!new File(Main.getInstance().getDataFolder() + "/theme/basictheme.schematic").exists()) {
             Main.getInstance().getLogger().info("Creating basic theme schematic");
             copy(getClass().getResourceAsStream("/schematics/theme/basictheme.schematic"), Main.getInstance().getDataFolder().getAbsolutePath() + "/theme/basictheme.schematic");

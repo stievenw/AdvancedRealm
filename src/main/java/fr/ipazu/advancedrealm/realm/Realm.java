@@ -5,20 +5,16 @@ import fr.ipazu.advancedrealm.realm.themes.Theme;
 import fr.ipazu.advancedrealm.realm.themes.ThemeType;
 import fr.ipazu.advancedrealm.utils.ConfigFiles;
 import fr.ipazu.advancedrealm.utils.CuboidUtils;
-import fr.ipazu.advancedrealm.utils.SchematicUtils;
 import fr.ipazu.advancedrealm.utils.WorldBorder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
-import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -140,50 +136,25 @@ public class Realm {
     }
 
     public void fillChest() {
-        if (ConfigFiles.getRealmType() == RealmType.WORLD) {
-            Location chestLoc = theme.getSpawn().clone().add(1, 0, 0);
-            chestLoc.getBlock().setType(Material.CHEST);
-            Chest chest = (Chest) chestLoc.getBlock().getState();
-            if (ConfigFiles.getRealmchest() == null) {
-                chest.getBlockInventory().setItem(2, new ItemStack(Material.CARROT));
-                chest.getBlockInventory().setItem(3, new ItemStack(Material.SUGAR_CANE));
-                chest.getBlockInventory().setItem(5, new ItemStack(Material.MELON));
-                chest.getBlockInventory().setItem(6, new ItemStack(Material.ICE));
-                chest.getBlockInventory().setItem(13, new ItemStack(Material.TORCH, 8));
-                chest.getBlockInventory().setItem(20, new ItemStack(Material.POTATO));
-                chest.getBlockInventory().setItem(21, new ItemStack(Material.CACTUS));
-                chest.getBlockInventory().setItem(23, new ItemStack(Material.PUMPKIN));
-                chest.getBlockInventory().setItem(24, new ItemStack(Material.LAVA_BUCKET));
-            } else {
-                chest.getBlockInventory().setContents(ConfigFiles.getRealmchest().getContents());
-            }
-            return;
+        Location chestLoc = theme.getSpawn().clone().add(1, 0, 0);
+        chestLoc.getBlock().setType(Material.CHEST);
+        fillChestInventory((Chest) chestLoc.getBlock().getState());
+    }
+
+    private void fillChestInventory(Chest chest) {
+        if (ConfigFiles.getRealmchest() == null) {
+            chest.getBlockInventory().setItem(2, new ItemStack(Material.CARROT));
+            chest.getBlockInventory().setItem(3, new ItemStack(Material.SUGAR_CANE));
+            chest.getBlockInventory().setItem(5, new ItemStack(Material.MELON));
+            chest.getBlockInventory().setItem(6, new ItemStack(Material.ICE));
+            chest.getBlockInventory().setItem(13, new ItemStack(Material.TORCH, 8));
+            chest.getBlockInventory().setItem(20, new ItemStack(Material.POTATO));
+            chest.getBlockInventory().setItem(21, new ItemStack(Material.CACTUS));
+            chest.getBlockInventory().setItem(23, new ItemStack(Material.PUMPKIN));
+            chest.getBlockInventory().setItem(24, new ItemStack(Material.LAVA_BUCKET));
+        } else {
+            chest.getBlockInventory().setContents(ConfigFiles.getRealmchest().getContents());
         }
-
-        for (Block block : cuboid.getBlocks()) {
-            if (block.getLocation().getChunk().isLoaded()) {
-                block.getLocation().getChunk().load();
-            }
-            Block fromloc = block.getLocation().getBlock();
-            if (fromloc.getType() == Material.CHEST) {
-                Chest chest = (Chest) fromloc.getState();
-                if (ConfigFiles.getRealmchest() == null) {
-                    chest.getBlockInventory().setItem(2, new ItemStack(Material.CARROT));
-                    chest.getBlockInventory().setItem(3, new ItemStack(Material.SUGAR_CANE));
-                    chest.getBlockInventory().setItem(5, new ItemStack(Material.MELON));
-                    chest.getBlockInventory().setItem(6, new ItemStack(Material.ICE));
-                    chest.getBlockInventory().setItem(13, new ItemStack(Material.TORCH, 8));
-                    chest.getBlockInventory().setItem(20, new ItemStack(Material.POTATO));
-                    chest.getBlockInventory().setItem(21, new ItemStack(Material.CACTUS));
-                    chest.getBlockInventory().setItem(23, new ItemStack(Material.PUMPKIN));
-                    chest.getBlockInventory().setItem(24, new ItemStack(Material.LAVA_BUCKET));
-                } else {
-                    chest.getBlockInventory().setContents(ConfigFiles.getRealmchest().getContents());
-                }
-
-            }
-        }
-
     }
 
     public void promote(RealmPlayer player, RealmRank rank) {
@@ -196,19 +167,6 @@ public class Realm {
     }
 
     public void pasteIsland() {
-        if (ConfigFiles.getRealmType() == RealmType.ISLAND) {
-            if (Bukkit.getPluginManager().getPlugin("WorldEdit") == null) {
-                Main.getInstance().getLogger().warning("WorldEdit not found. Install WorldEdit to enable schematic pasting.");
-                return;
-            }
-            try {
-                File file = new File(Main.getInstance().getDataFolder(), "island.schematic");
-                new SchematicUtils(theme.getSpawn(),file).paste();
-            } catch (Exception e) {
-                Main.getInstance().getLogger().log(java.util.logging.Level.SEVERE, "Failed to load schematic", e);
-            }
-            return;
-        }
         Biome biome = theme.getSpawn().getWorld().getBiome(theme.getSpawn().getBlockX(), theme.getSpawn().getBlockZ());
         if (biome == Biome.SWAMP) {
             buildPlatform(3);
@@ -256,16 +214,6 @@ public class Realm {
         }
         new RealmConfig().delete(this);
         new RealmConfig().removeVotes(this);
-        if (ConfigFiles.getRealmType() == RealmType.ISLAND) {
-            for (Block block : cuboid.getBlocks()) {
-                block.setType(Material.AIR);
-            }
-            for (Entity entity : theme.getSpawn().getWorld().getEntities()) {
-                if (!(entity instanceof Player) && cuboid.containsLocation(entity.getLocation())) {
-                    entity.remove();
-                }
-            }
-        }
     }
 
     public void demote(RealmPlayer player) {

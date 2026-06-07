@@ -2,8 +2,6 @@ package fr.ipazu.advancedrealm.commands;
 
 import fr.ipazu.advancedrealm.gui.WholeGUI;
 import fr.ipazu.advancedrealm.realm.RealmPlayer;
-import fr.ipazu.advancedrealm.realm.RealmType;
-import fr.ipazu.advancedrealm.utils.ConfigFiles;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -25,11 +23,7 @@ public class Claim implements CommandExecutor {
             }
             RealmPlayer rp = RealmPlayer.getPlayer(player.getUniqueId().toString());
             if(rp.getOwned() == null){
-                if (ConfigFiles.getRealmType() == RealmType.WORLD) {
-                    new WholeGUI().openBiomeGUI(player, rp);
-                } else {
-                    new WholeGUI().openPerkGUI(player, rp);
-                }
+                new WholeGUI().openBiomeGUI(player, rp);
             }
             else
                 player.sendMessage("§cYou already have claimed a realm");

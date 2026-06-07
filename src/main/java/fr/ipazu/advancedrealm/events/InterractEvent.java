@@ -4,7 +4,6 @@ import fr.ipazu.advancedrealm.Main;
 import fr.ipazu.advancedrealm.realm.Realm;
 import fr.ipazu.advancedrealm.realm.RealmPlayer;
 import fr.ipazu.advancedrealm.realm.RealmRank;
-import fr.ipazu.advancedrealm.realm.RealmType;
 import fr.ipazu.advancedrealm.utils.Config;
 import fr.ipazu.advancedrealm.utils.ConfigFiles;
 import net.md_5.bungee.api.ChatMessageType;
@@ -47,12 +46,7 @@ public class InterractEvent implements Listener {
             if (player.hasPermission("realm.bypass")) {
                 return;
             }
-            if (ConfigFiles.getRealmType() == RealmType.ISLAND && realm.getTheme().getCuboid().containsLocation(event.getBlock().getLocation())) {
-                if (!config.getString("messages.interact.nobreak").isEmpty() && config.getString("messages.interact.nobreak") != null)
-                    player.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(config.getString("messages.interact.nobreak").replace("&","§")));
-                event.setCancelled(true);
-            }
-            else if (!realm.getRealmMembers().contains(realmPlayer)) {
+            if (!realm.getRealmMembers().contains(realmPlayer)) {
                 if (!config.getString("messages.interact.nobreak").isEmpty() && config.getString("messages.interact.nobreak") != null)
                     player.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(config.getString("messages.interact.nobreak").replace("&","§")));
                 event.setCancelled(true);
@@ -77,11 +71,6 @@ public class InterractEvent implements Listener {
                     player.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(config.getString("messages.interact.nobuild").replace("&","§")));
                 event.setCancelled(true);
             }
-            else if (ConfigFiles.getRealmType() == RealmType.ISLAND && checkBlockInRealm(event.getBlockPlaced().getLocation(), realm)) {
-                if (!config.getString("messages.interact.nobuild").isEmpty() && config.getString("messages.interact.nobuild") != null)
-                    player.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(config.getString("messages.interact.nobuild").replace("&","§")));
-                event.setCancelled(true);
-            }
 
         }
     }
@@ -90,7 +79,7 @@ public class InterractEvent implements Listener {
     public void onPortal(PlayerPortalEvent event) {
         if (Realm.getRealmFromLocation(event.getFrom()) != null) {
             Realm realm = Realm.getRealmFromLocation(event.getFrom());
-            if (ConfigFiles.getRealmType() == RealmType.ISLAND && realm.getTheme().getCuboid().containsLocation(event.getFrom())) {
+            if (realm.getTheme().getCuboid().containsLocation(event.getFrom())) {
                 event.setCancelled(true);
                 event.setTo(ConfigFiles.getSpawn());
             }
@@ -138,7 +127,7 @@ public class InterractEvent implements Listener {
             Block b = iter.next();
             if (Realm.getRealmFromLocation(b.getLocation()) != null) {
                 Realm realm = Realm.getRealmFromLocation(b.getLocation());
-                if (ConfigFiles.getRealmType() == RealmType.ISLAND && realm.getTheme().getCuboid().containsLocation(b.getLocation())) {
+                if (realm.getTheme().getCuboid().containsLocation(b.getLocation())) {
                     iter.remove();
                 }
             }
@@ -195,7 +184,7 @@ public class InterractEvent implements Listener {
         } else {
             if (Realm.getRealmFromLocation(event.getEntity().getLocation()) != null && event.getEntity() instanceof Player) {
                 Realm realm = Realm.getRealmFromLocation(event.getEntity().getLocation());
-                if (ConfigFiles.getRealmType() == RealmType.ISLAND && realm.getTheme().getCuboid().containsLocation(event.getEntity().getLocation())) {
+                if (realm.getTheme().getCuboid().containsLocation(event.getEntity().getLocation())) {
                     event.setCancelled(true);
                 }
             }
@@ -230,7 +219,7 @@ public class InterractEvent implements Listener {
                 if (!realm.getRealmMembers().contains(RealmPlayer.getPlayer(player.getUniqueId().toString()))) {
                     event.setCancelled(true);
                 }
-                if (ConfigFiles.getRealmType() == RealmType.ISLAND && realm.getTheme().getCuboid().containsLocation(player.getLocation())) {
+                if (realm.getTheme().getCuboid().containsLocation(player.getLocation())) {
                     event.setCancelled(true);
                 }
             }
@@ -242,18 +231,11 @@ public class InterractEvent implements Listener {
     public void mobSpawn(CreatureSpawnEvent event) {
         if (Realm.getRealmFromLocation(event.getEntity().getLocation()) != null) {
             Realm realm = Realm.getRealmFromLocation(event.getEntity().getLocation());
-            if (ConfigFiles.getRealmType() == RealmType.ISLAND && realm.getTheme().getCuboid().containsLocation(event.getEntity().getLocation())) {
+            if (realm.getTheme().getCuboid().containsLocation(event.getEntity().getLocation())) {
                 event.setCancelled(true);
             }
 
         }
-    }
-
-    private boolean checkBlockInRealm(Location l, Realm r) {
-        if (r.getTheme().getCuboid().containsLocation(l)) {
-            return true;
-        }
-        return false;
     }
 
     private void useless() {
